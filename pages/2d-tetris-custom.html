@@ -15,10 +15,10 @@
   <head>
     <script src="https://aframe.io/releases/1.1.0/aframe.min.js"></script>
     <script src="https://cdn.jsdelivr.net/gh/donmccurdy/aframe-extras@v6.1.1/dist/aframe-extras.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/diarmidmackenzie/key-bindings@v0.1-alpha/key-bindings.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/diarmidmackenzie/key-bindings@latest/key-bindings.min.js"></script>
     <script src="https://cdn.jsdelivr.net/gh/diarmidmackenzie/6dof-object-control@v0.1-alpha/src/6dof-object-control.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/diarmidmackenzie/6dof-object-control@v0.1-alpha/src/keyboard-hand-controls.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/diarmidmackenzie/tetris-engine@v0.1-alpha/src/tetris.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/diarmidmackenzie/6dof-object-control@latest/src/keyboard-hand-controls.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/diarmidmackenzie/tetris-engine@latest/src/tetris.js"></script>
   </head>
   <body>
     <a-scene renderer="colorManagement:true">
@@ -50,7 +50,7 @@
                                                    ShiftRight=zRotPlus,
                                                    Space=drop"
                                               position = "0.0 2.3 -1"></a-entity>
-      <a-entity tetrisgame="generator: #shape-gen; scoreboard: #scoreboard"></a-entity>
+      <a-entity tetrisgame="generator: #shape-gen; scoreboard: #scoreboard" key-bindings="bindings:Backspace=start,#rhand.abuttondown=start"></a-entity>
 
       <!-- Arena should be a plane, but we can put it on top of other shape -->
       <a-plane shadow="receive:true" material="color:0xFFF;metalness:0.6" height="0.1" width="1.0" rotation="-90 0 0" id="arena" arena="x: 10; z: 1" position = "0.05 0.8 -1" ></a-plane>
@@ -66,8 +66,8 @@
       <a-text id="scoreboard" value="Score" position="-0.35 0.55 -0.7" color="black"></a-text>
       <a-box material="transparent:true;opacity:0.3" height="1.5" width="1.0" depth="0.5" position = "0.05 1.55 -1" ></a-box>
       <a-circle scale = "5 5 5" material="color:0xAAA;metalness:0.3" rotation="-90 0 0" position = "0 0 0" ></a-circle>
-      <a-text position="-5 2 0" rotation="0 90 0" height="0.1" color="white" value="Use Right Controller:\n Grip + move to move\n
-      Trigger + Rotate to rotate.\nRefresh the browser to restart."></a-text>
+      <a-text position="-5 2 0" rotation="0 90 0" height="0.1" color="white" value="A to Start (or restart in-game).\n Use Right Controller:\n Grip + move to move\n
+      Trigger + Rotate to rotate.\n"></a-text>
       <a-assets>
         <img id="sky" src="night-sky.jfif">
       </a-assets>

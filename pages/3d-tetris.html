@@ -11,10 +11,10 @@
     <script src="https://aframe.io/releases/1.1.0/aframe.min.js"></script>
     <script src="https://unpkg.com/aframe-environment-component@2.0.0/dist/aframe-environment-component.min.js"></script>
     <script src="https://cdn.jsdelivr.net/gh/donmccurdy/aframe-extras@v6.1.1/dist/aframe-extras.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/diarmidmackenzie/key-bindings@v0.1-alpha/key-bindings.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/diarmidmackenzie/key-bindings@latest/key-bindings.min.js"></script>
     <script src="https://cdn.jsdelivr.net/gh/diarmidmackenzie/6dof-object-control@v0.1-alpha/src/6dof-object-control.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/diarmidmackenzie/6dof-object-control@v0.1-alpha/src/keyboard-hand-controls.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/diarmidmackenzie/tetris-engine@v0.1-alpha/src/tetris.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/diarmidmackenzie/6dof-object-control@latest/src/keyboard-hand-controls.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/diarmidmackenzie/tetris-engine@latest/src/tetris.js"></script>
   </head>
   <body>
     <a-scene renderer="colorManagement:true">
@@ -62,7 +62,7 @@
            See tetris-engine README for details of shapegenerator config-->
       <a-entity id='shape-gen' shapegenerator="debug:true;logger1:#log-panel1;logger2:#log-panel2"
                                position = "0.0 2.0 -1"></a-entity>
-      <a-entity tetrisgame="generator: #shape-gen; scoreboard: #scoreboard"></a-entity>
+      <a-entity tetrisgame="generator: #shape-gen; scoreboard: #scoreboard" key-bindings="debug:true;bindings:Backspace=start,#rhand.abuttondown=start"></a-entity>
 
       <!--For 3D tetris we use a 5 x 5 board.  That seems to be about right
           in terms of gameplay balance.
@@ -75,7 +75,7 @@
 
       <!--Scoreboard, and some text to guide the user-->
       <a-text id="scoreboard" value="Score" position="3 1 -3" color="black"></a-text>
-      <a-text position="-6 1 -5" color="black" value="Controls:Z/X to move L/R\nEnter/Shift to Rotate cw/ccw.  Space to drop.  Refresh to restart."></a-text>
+      <a-text position="-6 1 -5" color="black" value="Backspace or A to start (or re-start in-game).\nControls:YGHJ to move in plane.\nNumberPad 4-9 for rotations.  Space to drop."></a-text>
 
       <!--Some text panels for debug information - only necessary if you are
       running with debug=true-->
