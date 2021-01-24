@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<h1>A-Frame VR Tetris Games - Pre-alpha</h1>
+
+  <h2>What is this?</h2>
+
+  <p>Pre-alpha development versions of some VR Tetris games.
+    These are at a very early stage of development - they are much closer to a proof of concept than a full game at this stage.
+  <p>However, they are playable (give or take a couple of bugs), and quite fun!  I am more than happy for anyone who wants to play these games, and share them with others too.
+    But if hitting bugs and glitches is going to make you sad, I suggest you wait a few weeks, when hopefully the quality will be a bit better.
+  </p>
+  <p>Also, please be aware I haven't done any work yet on performance, to ensure high frame rates.  So if you are sensitive to this sort of thing, please take care.</p>
+
+  <p>I've been testing this on Oculus Quest 2, using the Oculus Browser.
+    In theory it should work with other Web XR compatible devices.  If you try it on a different device, and it works (or doesn't work), I'd be interested to know.  But I probably won't be fixing it up to work on additional systems any time soon.</p>
+
+  <p>If you don't have a VR headset, you can play it on a laptop or dektop PC, using keyboard controls, but sadly it falls a long way short of the VR experience.</p>
+
+  <h2>Game modes available today:</h2>
+
+  <p><a href=2d-tetris.html>2D Tetris</a> - The classic game.  Not very different in 3D, except you can play from either side of the board.<p>
+  <p><a href=3d-tetris.html>3D Tetris</a> - A 3D version of Tetris.  Difficult on a 2D browser, but much easier in 3D.  You have to fill an entire 5x5 layer before it disappears.</p>
+  <p><a href=2d-pentris.html>2D "Pentris"</a> - Like classic 2D Tetris, but with all possible 5-block tiles.  This is much harder!  But with a bit of practice and familiarity with the new shapes, it's quite playable.</p>
+  <p><a href=2d-tetris-custom.html>Space Balls!</a> - It's just 2D Tetris again, with a different skin...<p>
+
+  <h2>Controls</h2>
+    <p>6DOF controls: Grip Down + move to move, Trigger Down + rotate to rotate.  Grip+Trigger together will allow moving and rotation together.  No control yet to drop blocks.</p>
+    <p>My view on the 6DOF controls is that they are OK, but not great, and I'm looking to make some changes in the near future...<p>
+    <p>Keyboard controls (for computer browser):
+      <ul>
+        <li>for 2D games: Z/X left/right, RShift/Enter to rotate, Space to drop.</li>
+        <li>for 3D games: YGHJ for movement in the plane, NumPad 4-9 for rotations.</li>
+      </ul>
+      The default position of the board is optimized for VR.  On desktop, take 1-2 steps back (press S, or down-arrow, 1-2 times) to see the whole playing arena.
+      <br><br>
+      The scoring is: 1 point for a line/layer, N-squared points for N lines/layers at a time.
+    </p>
+
+  <p>There is no "start game" or "restart game" control yet.  Just hit Refresh to restart.  If anything else goes wrong or weird, I also recommend you exit VR, hit Refresh in the browser, and then re-enter VR.</p>
+
+  <h2>Other info</h2>
+
+  <p>Some technical notes: All game modes use the same Javascript Engine, and the differences amount to a few lines of HTML.</p>
+  <p>My hope is to make many more aspects of the game customizable using HTML only. - block colors, sizes, textures, controls, scoring etc. etc.</p>
+
+  <p>All code is open source <a href=https://github.com/diarmidmackenzie/tetris-engine>here</a></p>
+
+  <p>If you want to get in touch with me, you can do so using twitter @dhmackenzie.  You can also find me on the A-Frame slack community.</p>
+
+  <p>I hope you have fun playing these games, and I look forward to sharing improved versions of them with you in future!</p>
+
+  <h2>Q & A</h2>
+
+  <p>What's all that debug info in the background?  It was helpful to me at one point!  I'm going to be getting rid of it, but haven't done so yet...  Just ignore it.</p>
+
+  <p>Why is this hosted on PythonAnywhere, if it's not Python code?  Just a convenient place I had available, that's already set up with SSL.  I'm looking at moving to a bespoke domain at some point.</p>
+
+  <p>Do you know about the bug where sometimes pieces get stuck at the edge of the play area, half way up?  Yes, I know about it.  But I don't understand why it happens yet.  I will be working on this...  Sorry it's not fixed yet - hope it doesn't wreck too many of your high-score attempts!</p>
+
+</body>
+</html>
