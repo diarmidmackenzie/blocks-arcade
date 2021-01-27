@@ -61,7 +61,7 @@
                scale="0.1 0.1 0.1"
                class="clickable"
                proximity="target:#rhand;start:start"
-               event-set__start="_event: start; visible: false"
+               event-set__start="_event: started; visible: false"
                event-set__gameover="_event: game-over; visible: true">
       </a-mixin>
 
@@ -110,9 +110,9 @@
                 mixin="glass start"
                 src="start.png"
                 rotation="0 -120 0"
-                key-bindings="bindings:Enter=start,#stand1.focus=focus,#stand1.defocus=defocus"
+                key-bindings="bindings:Enter=start,#stand1.focus=focus,#stand1.defocus=defocus"                
                 event-set__show="_target:#help1;_event:game-over; visible:true"
-                event-set__hide="_target:#help1;_event:start; visible:false">
+                event-set__hide="_target:#help1;_event:started; visible:false">
       </a-sphere>
 
       <!-- Put the game on a metal stand-->
@@ -147,14 +147,14 @@
       <!-- Note shapes have to be oriented N-S, not E-W due to the game orientation-->
       <a-entity id='shape-gen2' shapegenerator="arena:#arena2" position = "-3 2 -3"></a-entity>
       <!-- game start control is a sphere, 10cm radius, to the right of the game-->
-      <a-sphere id="game2" tetrisgame="generator: #shape-gen2; scoreboard: #scoreboard2; arena: #arena2"
+      <a-sphere id="game2" tetrisgame="generator: #shape-gen2; scoreboard: #scoreboard2; arena: #arena2;focus:false"
                 position="-3 1 -3.75"
                 mixin="glass start"
                 src="start.png"
                 rotation="0 60 0"
                 key-bindings="bindings:Enter=start,#stand2.focus=focus,#stand2.defocus=defocus"
                 event-set__show="_target:#help2;_event:game-over; visible:true"
-                event-set__hide="_target:#help2;_event:start; visible:false">
+                event-set__hide="_target:#help2;_event:started; visible:false">
               </a-sphere>
 
       <!-- Put the game on a metal stand-->
@@ -192,14 +192,14 @@
                                               shapes:NNNN,NNNU,NNND,NNUN,NNDN,NNDD,NNDS,NNUS,NNSDD,NDND,NDNSD,SDSND,NUDDUN"
                                               position = "3 2 -6"></a-entity>
       <!-- game start control is a sphere, 10cm radius-->
-      <a-sphere id="game3" tetrisgame="generator: #shape-gen3; scoreboard: #scoreboard3; arena: #arena3"
+      <a-sphere id="game3" tetrisgame="generator: #shape-gen3; scoreboard: #scoreboard3; arena: #arena3;focus:false"
                 position="3 1 -5"
                 mixin="glass start"
                 src="start.png"
                 rotation="0 -120 0"
                 key-bindings="bindings:Enter=start,#stand3.focus=focus,#stand3.defocus=defocus"
                 event-set__show="_target:#help3;_event:game-over; visible:true"
-                event-set__hide="_target:#help3;_event:start; visible:false">
+                event-set__hide="_target:#help3;_event:started; visible:false">
                 </a-sphere>
 
       <!-- Put the game on a metal stand-->
@@ -232,14 +232,14 @@
                 position = "-3 2 -6">
       </a-entity>
       <!-- game start control is a sphere, 10cm radius, to the right of the game-->
-      <a-sphere id="game4" tetrisgame="generator: #shape-gen4; scoreboard: #scoreboard4; arena: #arena4"
+      <a-sphere id="game4" tetrisgame="generator: #shape-gen4; scoreboard: #scoreboard4; arena: #arena4;focus:false"
                 position="-3 1 -6.75"
                 mixin="glass start"
                 src="start.png"
                 rotation="0 60 0"
                 key-bindings="bindings:Enter=start,#stand4.focus=focus,#stand4.defocus=defocus"
                 event-set__show="_target:#help4;_event:game-over; visible:true"
-                event-set__hide="_target:#help4;_event:start; visible:false">
+                event-set__hide="_target:#help4;_event:started; visible:false">
       </a-sphere>
 
       <!-- Put the game on a metal stand-->
