@@ -97,7 +97,19 @@ AFRAME.registerComponent('this-inspector', {
     logger: {type: 'string'}
   },
   init: function() {
-    this.logger = document.querySelector(this.data.logger);
+    if (this.data.logger !== "")
+    {
+      this.logger = document.querySelector(this.data.logger);
+    }
+    else {
+      // Create logger at a HUD position attached to the camera.
+      var camera = document.querySelector('a-scene').camera.el;
+      this.logger = document.createElement('a-text');
+      this.logger.setAttribute('id', "this-logger")
+      this.logger.setAttribute('position', "-1 0 -2")
+      camera.appendChild(this.logger);
+    }
+
     this.parameters = this.data.field.split(".");
     this.values = []
   },
