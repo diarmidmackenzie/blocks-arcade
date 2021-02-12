@@ -1,0 +1,7 @@
+
+*.pyc
+src/thumbstick-object-control.js
+src/tetris.js
+src/keyboard-hand-controls.js
+src/key-bindings.js
+src/6dof-object-control.js
