@@ -254,6 +254,7 @@ AFRAME.registerComponent('attention', {
 // Scene jumping.
 AFRAME.registerComponent('scene-jumps', {
   schema: {
+    camera: {type: 'selector', default: "#camera"},    
     positions: {type: 'array', default: ["0 0 0 0 0 0"]},
     foci: {type: 'array', default: ["a-scene"]}
   },
@@ -263,6 +264,7 @@ AFRAME.registerComponent('scene-jumps', {
     this.positions = [];
     this.foci = [];
     this.currentPosition = 0;
+    this.keyListener = this.keydown.bind(this);
     this.data.positions.forEach((item) => {
       var config = item.split(" ")
 
@@ -287,24 +289,59 @@ AFRAME.registerComponent('scene-jumps', {
       if (this.positions.length > this.foci.length) {
         this.foci.push("a-scene");
       }
-      this.jumpListener = this.jump.bind(this);
     });
 
-    this.el.addEventListener("jump", this.jumpListener);
+    window.addEventListener('keydown', this.keyListener, false);
     this.setPosition(0);
     this.setFocus(0, 0);
   },
+  tick: function (time, timeDelta) {
+    this.uselessState = 0;
+  },
 
-  jump: function() {
+  keydown: function (event) {
+    switch (event.key) {
+      case "-":
+        this.jump(-1);
+        break;
 
-    var prevPosition= this.currentPosition;
+      case "=":
+        this.jump(1);
+        break;
 
-    this.currentPosition++;
+      case "0":
+      case "1":
+      case "2":
+      case "3":
+      case "4":
+      case "5":
+      case "6":
+      case "7":
+      case "8":
+      case "9":
+          var prevPosition = this.currentPosition;
+          this.currentPosition = (event.key.charCodeAt(0) - "0".charCodeAt(0));
+          if (this.currentPosition >= this.positions.length) {
+            this.currentPosition = 0;
+          }
+          this.setPosition(this.currentPosition);
+          this.setFocus(this.currentPosition, prevPosition);
+          break;
+    }
+  },
+
+  jump: function(direction) {
+
+    var prevPosition = this.currentPosition;
+
+    this.currentPosition += direction;
     if (this.currentPosition >= this.positions.length) {
       this.currentPosition = 0;
     }
+    if (this.currentPosition < 0) {
+      this.currentPosition = this.positions.length - 1;
+    }
     this.setPosition(this.currentPosition);
-
     this.setFocus(this.currentPosition, prevPosition);
   },
 
@@ -313,18 +350,21 @@ AFRAME.registerComponent('scene-jumps', {
     this.el.object3D.position.x = this.positions[index].x;
     this.el.object3D.position.y = this.positions[index].y;
     this.el.object3D.position.z = this.positions[index].z;
+
+    // Recenter camera: overwrite look-controls pitch & yaw objects.
+    // It wuld be nice if look-controls had an official interface to do this
+    // but it doesn't.  So we just dig into the internals & set them...
+    this.data.camera.components['look-controls'].pitchObject.rotation.x = 0;
+    this.data.camera.components['look-controls'].pitchObject.rotation.y = 0;
+    this.data.camera.components['look-controls'].pitchObject.rotation.z = 0;
+    this.data.camera.components['look-controls'].yawObject.rotation.x = 0;
+    this.data.camera.components['look-controls'].yawObject.rotation.y = 0;
+    this.data.camera.components['look-controls'].yawObject.rotation.z = 0;
+
     this.el.object3D.rotation.x = this.positions[index].xr * Math.PI / 180;
     this.el.object3D.rotation.y = this.positions[index].yr * Math.PI / 180;
     this.el.object3D.rotation.z = this.positions[index].zr * Math.PI / 180;
-  },
 
-  jumpPosition: function() {
-
-    this.currentPosition++;
-    if (this.currentPosition >= this.positions.length) {
-      this.currentPosition = 0;
-    }
-    this.setPosition(this.currentPosition);
   },
 
   setFocus: function(index, prevIndex) {
