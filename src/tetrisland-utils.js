@@ -194,6 +194,10 @@ AFRAME.registerComponent('attention', {
   },
 
   init: function() {
+    // The tick function calculations for attention are quite intensive.
+    // 5 times a second is plenty for attention/focus.
+    this.tick = AFRAME.utils.throttleTick(this.tick, 200, this);
+
     this.targetWorldPosition = new THREE.Vector3();
     this.cameraWorldPosition = new THREE.Vector3();
     this.vectorToTarget = new THREE.Vector3();
@@ -220,6 +224,7 @@ AFRAME.registerComponent('attention', {
         var target = document.querySelector(item);
         this.targets.push(target);
       });
+      this.gotTargets = true;
     }
 
     var bestScore = 0;
