@@ -67,10 +67,10 @@ def db_get_hiscore_data(game_id, timeframe_string, count):
   cursor = db.cursor()
 
   # Count total number of games in the timeframe
-  values = (game_id, timeframe_string)
+  values = (game_id, )
   query = """SELECT COUNT(time_stamp) FROM scores
              WHERE game_id = ? AND
-             time_stamp > CURRENT_TIMESTAMP - ?;"""
+             time_stamp > %s;""" % timeframe_string
   cursor.execute(query, values)
   row = cursor.fetchone()
   print(row.keys())
@@ -78,13 +78,13 @@ def db_get_hiscore_data(game_id, timeframe_string, count):
   print("Plays: {}".format(plays))
 
   # Now find the hi scores.
-  values = (game_id, timeframe_string, count)
+  values = (game_id, count)
   hiscores = []
   query = """SELECT * FROM scores
              WHERE game_id = ? AND
-             time_stamp > CURRENT_TIMESTAMP - ?
+             time_stamp > %s
              ORDER BY score DESC, gametime DESC
-             LIMIT ?;"""
+             LIMIT ?;""" % timeframe_string
   cursor.execute(query, values)
   rows = cursor.fetchall()
   print(len(rows))

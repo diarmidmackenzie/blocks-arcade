@@ -28,9 +28,9 @@ def hiscores_list():
         print("Invalid parameters: " + game + ", " + count)
         return("{}")
 
-    last_day = hiscore_data(game, "1", count)
-    last_month = hiscore_data(game, "30", count)
-    all_time = hiscore_data(game, "CURRENT_TIMESTAMP", count)
+    last_day = hiscore_data(game, "DATETIME('now','-1 day')", count)
+    last_month = hiscore_data(game, "DATETIME('now','-30 day')", count)
+    all_time = hiscore_data(game, "0", count)
 
     dictionary = {'today': last_day,
                   'month': last_month,
