@@ -55,7 +55,8 @@
                                    0 0 -1.65 -6 0 0,
                                    1.6 0 -1.6 -6 -45 0,
                                    1.8 0 0 -6 -90 0,
-                                   1.75 0 1.75 -6 -135 0">
+                                   1.75 0 1.75 -6 -135 0,
+                                   0 0 2.5 15 180 0">
 
     <a-entity id="camera" camera position="0 1.6 0" look-controls>
       <!--<a-text id="log-panel3" value="Keyboard Sim Data" position="-2 2 -4" color="black"></a-text>-->
@@ -80,12 +81,17 @@
 <!-- Floor-->
 <a-plane material= "color:black;transparent:true;opacity:0.9" position = "0 1.6 4" rotation="0 0 0" scale = "2 3 1">
   <a-text width="0.9" text=wrapCount:40 position = "-0.45 0 0" align="left"
-          value="Welcome to the 3D Tetris Arcade!\n
+          dualtext="desktoptext:Welcome to the 3D Tetris Arcade!\n
                  If you have a VR-capable device, enter VR by clicking the icon in the bottom right.  Then walk forwards to enter the Arcade.\n
+                 If you are using a desktop computer...\n
+                 ...use number keys 1-7 to jump to the different machines, 8 for hi-scores, and 0 to return to this point.  Or -/= to jump left and right.\n
+                 ...or use WASD or cursors to move, and the mouse to look around.\n
+                 This experience was designed primarily for VR, but all games can be controlled by either keyboard (on desktop) or 6DoF VR controllers (in VR).\n
+                 More info at https://<URL to be confirmed>;
+                 vrtext:Welcome to the 3D Tetris Arcade!\n
+                 You are now in VR mode.  Walk forwards to enter the Arcade.\n
                  Walk using the right thumbstick, or teleport using the left trigger.\n
-                 If you are using a desktop computer, use number keys 1-7 to jump to the different machines, and 0 to return to this point.  Or -/= to jump left and right.\n
-                 Or use WASD or cursors to move, and the mouse to look around.\n
-                 This experience was designed primarily for VR, but all games can be controlled by either keyboard (on desktop) or 6DoF VR controllers (in VR).\n"
+                 More info at https://<URL to be confirmed>;">
            </a-text>
 </a-plane>
 
