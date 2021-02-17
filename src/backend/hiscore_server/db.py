@@ -46,22 +46,23 @@ def init_app(app):
 # score is the points scored
 # level is the level reached
 # gametime is the duration of the game (in seconds).
-def db_add_row(game_id, score, level, gametime):
+# vr is 0 if in desktop play, 1 if in VR
+def db_add_row(game_id, score, level, gametime, vr):
     # Note that row_index & creation timestamp can be left as default
     # The SQL DB will set them correctly.
 
-    values = (game_id, score, level, gametime)
+    values = (game_id, score, level, gametime, vr)
     sql_command = """INSERT INTO SCORES
-                     (game_id, score, level, gametime)
-                     VALUES (?, ?, ?, ?);"""
+                     (game_id, score, level, gametime, vr)
+                     VALUES (?, ?, ?, ?, ?);"""
     db = get_db()
     db.execute(sql_command, values)
     db.commit()
 
     return
 
-# timefarme string: set to "1" for today, "30" for this month,
-# "CURRENT_TIMESTAMP" for all time.
+# timefarme string: set to "DATETIME('now','-1 day')" for today,
+# "DATETIME('now','-30 day')" for this month, "0" for all time.
 def db_get_hiscore_data(game_id, timeframe_string, count):
   db = get_db()
   cursor = db.cursor()

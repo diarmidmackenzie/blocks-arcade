@@ -68,6 +68,7 @@ def process_submission(data):
     score = data['score']
     level = data['level']
     gametime = data['gametime']
+    vr = data['vr']
 
     # Run some checks on the data.
 
@@ -75,11 +76,12 @@ def process_submission(data):
         assert(int(score) >= 0)
         assert(int(level) > 0)
         assert(int(gametime) > 0)
+        assert(int(vr) >= 0)
     except:
         print ("Invalid JSON data")
         return False
 
-    db_add_row(game, score, level, gametime)
+    db_add_row(game, score, level, gametime, vr)
 
     text = "OK"
     return text

@@ -12,8 +12,12 @@ CREATE TABLE scores (
   time_stamp DATETIME DEFAULT CURRENT_TIMESTAMP,
   score INTEGER CHECK (score >= 0),
   level INTEGER CHECK (level >= 0),
-  gametime INTEGER CHECK (gametime >= 0)
-
+  gametime INTEGER CHECK (gametime >= 0),
+  vr INTEGER CHECK (vr >= 0),
+  spare1 INTEGER,
+  spare2 INTEGER,
+  spare3 INTEGER,
+  spare4 VARCHAR(20)
 );
 
 -- Index used to accelerate searches for needs recorded against a particular game.

@@ -1087,13 +1087,17 @@ AFRAME.registerComponent('hi-score-logger', {
       'gameOver': this.gameOver.bind(this)
     }
     this.el.addEventListener("game-over", this.listeners.gameOver);
+    this.sceneEl = document.querySelector('a-scene');
   },
 
   gameOver: function (event) {
+    var isVR = (this.sceneEl.is('vr-mode')) ? 1 : 0;
+
     const data = {game: this.data.game,
                   score: event.detail.score,
                   level: event.detail.level,
-                  gametime: event.detail.gametime};
+                  gametime: event.detail.gametime,
+                  vr: isVR};
     const jsonData = JSON.stringify(data);
 
     var request = new XMLHttpRequest();
