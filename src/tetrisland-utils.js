@@ -694,7 +694,7 @@ AFRAME.registerComponent('tetris-machine', {
                            _event:game-over; visible:true`);
     entityEl.setAttribute("event-set__hide",
                           `_target:#help${this.data.id};
-                           _event:start; visible:false`);
+                           _event:started; visible:false`);
     this.el.appendChild(entityEl);
 
   },
