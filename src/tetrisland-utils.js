@@ -382,13 +382,13 @@ const TETRIS_BLOCK_COLORS = [
 ]
 
 const TETRIS_CONTROLS_DESKTOP = {
-  '2D': `Controls:\n\nEnter to start\n\nMove L/R:\n Z & X\n\nRotate:\nR-Shift/Enter\n\nSpace to drop`,
-  '3D': `Controls:\n\nEnter to start\n\nMove in the\nhorizontal plane:\n YGHJ\n\nRotations:\nYaw: 4/6\nPitch: 5/8\nRoll:7/9\n\nSpace to drop`
+  '2D': `Controls:\n\nEnter to start\nMove L/R: Z & X\nRotate: R-Shift/Enter\n\nSpace to drop`,
+  '3D': `Controls:\n\nEnter to start\nMove in the horizontal plane: YGHJ\nRotations:\nYaw: 4/6\nPitch: 5/8\nRoll:7/9\n\nSpace to drop`
 }
 
 const TETRIS_CONTROLS_VR = {
-  '2D': `Controls:\n\nTouch the sphere\n to start\nMove:\nGrip & move\nRotate:\nGrip & turn\nA to drop`,
-  '3D': `Controls:\n\nTouch the sphere\n to start\nMove:\nGrip & move\nRotate:\nGrip & turn\nA to drop`
+  '2D': `Controls:\nRight trigger to start\nMove: Left Thumbstick or\nRight Grip & move\n\nRotate: Right Thumbstick or\nRight Grip & turn\n\nA or X to drop`,
+  '3D': `Controls:\nRight trigger to start\nMove: Left Thumbstick or\nRight Grip & move\n\nRotate: Right Thumbstick or\nRight Grip & turn\n\nA or X to drop`
 }
 
 
@@ -402,7 +402,7 @@ AFRAME.registerComponent('tetris-machine', {
     label:    {type: 'string'},
     xsize:    {type: 'number'},
     zsize:    {type: 'number'},
-    gameh:    {type: 'number', default: 20},
+    gameh:    {type: 'number', default: 16},
     baseh:    {type: 'number', default: 0.5},
     xspace:   {type: 'number', default: 0},
     zspace:   {type: 'number', default: 0},
@@ -450,7 +450,7 @@ AFRAME.registerComponent('tetris-machine', {
 
     // create the arena.  Not visible, so don't care about dimensions, just
     // position.
-    entityEl = document.createElement('a-entity');
+    var entityEl = document.createElement('a-entity');
     entityEl.setAttribute("id", "arena" + this.data.id);
     entityEl.setAttribute("arena", `x:${this.data.xsize};z:${this.data.zsize};clear:${this.data.clear}`);
     entityEl.setAttribute("position", `0 ${this.data.baseh} 0`);
@@ -460,21 +460,21 @@ AFRAME.registerComponent('tetris-machine', {
     // block color that can land in the arena.
     const colors = TETRIS_BLOCK_LIBRARY[this.data.shapeset].match(/,/g).length + 1;
     for (var ii = 0; ii < colors; ii++) {
-      var entityEl = document.createElement('a-entity');
+      entityEl = document.createElement('a-entity');
       entityEl.setAttribute("id", `arena${this.data.id}-mesh${ii}`);
       entityEl.setAttribute("position", `0 ${this.data.baseh} 0`);
       entityEl.setAttribute("framed-block", `facecolor: ${TETRIS_BLOCK_COLORS[ii]}; framecolor: black`);
       entityEl.setAttribute("instanced-mesh", `capacity: ${(this.data.xsize * this.data.zsize * this.data.gameh)}; debug:true`);
       this.el.appendChild(entityEl);
 
-      var entityEl = document.createElement('a-mixin');
+      entityEl = document.createElement('a-mixin');
       entityEl.setAttribute("id", `arena${this.data.id}-mixin${ii}`);
       entityEl.setAttribute("instanced-mesh-member", `mesh:#arena${this.data.id}-mesh${ii};debug:true`);
       entityEl.setAttribute("scale", "0.05 0.05 0.05");
       this.el.appendChild(entityEl);
     }
     // Create the stand.
-    var entityEl = document.createElement('a-entity');
+    entityEl = document.createElement('a-entity');
     entityEl.setAttribute("id", "stand" + this.data.id);
     entityEl.setAttribute("proximity", "target:#camera;axes:XZ;start:focus;end:defocus;distance:2.5");
     entityEl.setAttribute("shadow", "receive:true");
@@ -492,10 +492,38 @@ AFRAME.registerComponent('tetris-machine', {
     entityEl.setAttribute("event-set__defocus", "_event: defocus; framed-block.framecolor:#854c40");
     this.el.appendChild(entityEl);
 
+    // Label on the stand...
+    entityEl = document.createElement('a-text');
+    entityEl.setAttribute("id", `label${this.data.id}`);
+    entityEl.setAttribute("color", "white");
+    entityEl.setAttribute("align", "center");
+    entityEl.setAttribute("anchor", "center");
+    entityEl.setAttribute("baseline", "center");
+    entityEl.setAttribute("width", this.standWidth * 2);
+    entityEl.setAttribute("position",
+                          `${this.xoffset}
+                           ${this.data.baseh/2}
+                           ${this.zoffset + (this.standDepth/2)}`);
+    entityEl.setAttribute("value", this.data.label);
+    this.el.appendChild(entityEl);
+
+    // Create a box at the top that mirrors the stand.
+    entityEl = document.createElement('a-entity');
+    entityEl.setAttribute("id", "top" + this.data.id);
+    entityEl.setAttribute("framed-block",
+                          `facecolor: black;
+                          framecolor: white;
+                          width: ${this.standWidth};
+                          height: 0.5;
+                          depth: ${this.standDepth};
+                          frame: 0.05`);
+    entityEl.setAttribute("position", `${this.xoffset} ${this.data.baseh + (this.data.gameh * TETRIS_BLOCK_SIZE) + 0.25} ${this.zoffset}`);
+    this.el.appendChild(entityEl);
+
 
     // Finally, the glass casing.
 
-    var entityEl = document.createElement('a-box');
+    entityEl = document.createElement('a-box');
     entityEl.setAttribute("mixin", "glass");
     entityEl.setAttribute("height", 0.1 * this.data.gameh);
     entityEl.setAttribute("width", this.glassWidth + 0.002);
@@ -572,14 +600,17 @@ AFRAME.registerComponent('tetris-machine', {
 
   createScoreboard: function() {
 
-    entityEl = document.createElement('a-text');
+    var entityEl = document.createElement('a-text');
     entityEl.setAttribute("id", `scoreboard${this.data.id}`);
-    entityEl.setAttribute("width", "2");
+    entityEl.setAttribute("width", "1.4");
+    //entityEl.setAttribute("font", "sourcecodepro");
+    entityEl.setAttribute("anchor", "center");
+    entityEl.setAttribute("align", "left");
     entityEl.setAttribute("position",
-                          `${this.xoffset - (this.glassWidth *(2/5))}
-                           ${this.data.baseh + (this.data.gameh * TETRIS_BLOCK_SIZE) - 0.2}
-                           ${this.zoffset + (this.glassDepth /2) + 0.001}`);
-    entityEl.setAttribute("value", "Score: 0");
+                          `${this.xoffset + 0.5}
+                           ${this.data.baseh + (this.data.gameh * TETRIS_BLOCK_SIZE) + 0.25}
+                           ${this.zoffset + (this.standDepth /2) + 0.001}`);
+    entityEl.setAttribute("value", "Time: 0:00\nLevel: 0\nScore: 0");
     entityEl.setAttribute("color", "white");
     this.el.appendChild(entityEl);
 
@@ -587,17 +618,18 @@ AFRAME.registerComponent('tetris-machine', {
 
   createHelpText: function() {
 
-    entityEl = document.createElement('a-text');
+    var entityEl = document.createElement('a-text');
     entityEl.setAttribute("id", `help${this.data.id}`);
     entityEl.setAttribute("color", "white");
-    entityEl.setAttribute("width", "1");
+    entityEl.setAttribute("width", this.glassWidth - 0.1);
+    entityEl.setAttribute("text", `wrapCount:${Math.floor(this.glassWidth * 25)}`);
     entityEl.setAttribute("position",
                           `${this.xoffset - (this.glassWidth *(2/5))}
-                           ${this.data.baseh + (this.data.gameh * TETRIS_BLOCK_SIZE)/2 - 0.2}
+                           ${this.data.baseh + (this.data.gameh * TETRIS_BLOCK_SIZE)/2}
                            ${this.zoffset + (this.glassDepth /2) + 0.001}`);
     entityEl.setAttribute("dualtext",
-                          `desktoptext:${this.data.label}\n\n${this.data.description}\n${TETRIS_CONTROLS_DESKTOP[this.gametype]};
-                           vrtext:${this.data.label}\n\n${this.data.description}\n${TETRIS_CONTROLS_DESKTOP[this.gametype]}`);
+                          `desktoptext:${this.data.description}\n\n${TETRIS_CONTROLS_DESKTOP[this.gametype]};
+                           vrtext:${this.data.description}\n\n${TETRIS_CONTROLS_VR[this.gametype]}`);
     this.el.appendChild(entityEl);
   }
 
