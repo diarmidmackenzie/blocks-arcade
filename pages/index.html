@@ -58,7 +58,11 @@
                                    1.75 0 1.75 -6 -135 0,
                                    0 0 2.5 15 180 0">
 
-    <a-entity id="camera" camera position="0 1.6 0" look-controls>
+    <a-entity id="camera"
+              camera position="0 1.6 0"
+              look-controls
+              attention="axes:XZ;start:focus;end:defocus;
+                         targets:#stand1,#stand2,#stand3,#stand4,#stand5,#stand6,#stand7,#hiscores">
       <!--<a-text id="log-panel3" value="Keyboard Sim Data" position="-2 2 -4" color="black"></a-text>-->
     </a-entity>
 
@@ -193,11 +197,15 @@
 <a-entity position = "-4 3.5 6" mixin="shape3"></a-entity>
 
 <a-entity position = "0 3 6" framed-block="facecolor: black; framecolor: white; height:6; depth:1; width:3; frame:0.1">
-<a-plane text="font:sourcecodepro;xOffset:0.2;color:white;width:1.7"
+<a-plane id = "hiscores"
+         text="font:sourcecodepro;xOffset:0.2;color:white;width:1.6"
          color="black"
          position = "0 0 -0.5" rotation = "0 180 0" scale = "2 3 1"
          hi-scores-table="games:2DTetris6,2DTetris10,3DTetris4,3DTetris5,3DPentris6X,2DPentris12,2DPentris10R;
-                          names:Skinny Tetris,Classic Tetris,Mini 3D Tetris,3D Tetris,3D Pentris,2D Pentris,2D Pentris Easy">
+                          names:Skinny Tetris,Classic Tetris,Mini 3D Tetris,3D Tetris,3D Pentris,2D Pentris,2D Pentris Easy;
+                          keyboardcontrols: Z/X (keyboard) for prev/next;
+                          vrcontrols: X/Y (left controller) for prev/next"
+         key-bindings="bindings:KeyZ=prev,KeyX=next,#lhand.xbuttondown=prev,#lhand.ybuttondown=next">
 </a-plane>
 </a-entity>
 

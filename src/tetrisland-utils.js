@@ -185,9 +185,9 @@ AFRAME.registerComponent('dualtext', {
 // attention.
 AFRAME.registerComponent('attention', {
   schema: {
-    target: {type: 'string'},
-    camera: {type: 'string', default: "#camera"},
-    fov: {type: 'number', default: 30},
+    targets: {type: 'array'},
+    //fov: {type: 'number', default: 30},
+    maxdistance: {type: 'number', default: 10},
     focusevent: {type: 'string', default: "focus"},
     defocusevent: {type: 'string', default: "defocus"},
     axes: {type: 'string', default: "XYZ"}
@@ -199,53 +199,98 @@ AFRAME.registerComponent('attention', {
     this.vectorToTarget = new THREE.Vector3();
     this.cameraDirectionVector = new THREE.Vector3();
     this.attention = false;
-    this.fovAngle = this.data.fov * Math.PI / 360;
+    this.fovAngle = this.data.fov * Math.PI / 180;
+    this.cameraQuaternion = new THREE.Quaternion();
+    this.targets = [];
+    this.attentionTarget = null;
   },
 
   update: function () {
-    this.target = document.querySelector(this.data.target);
-    this.lastEmitted = 0;
+    // Indicate that targets list need rebuilding.
+    // Don't build yet as update is too early at start of day, relative
+    // to creation of target objects.
+    this.gotTargets = false;
+
   },
 
   tick: function (time, timeDelta) {
-    this.target.object3D.getWorldPosition(this.targetWorldPosition);
 
-    var camera = document.querySelector(this.data.camera)
-    camera.object3D.getWorldPosition(this.cameraWorldPosition);
+    if (!this.gotTargets) {
+      this.data.targets.forEach(item => {
+        var target = document.querySelector(item);
+        this.targets.push(target);
+      });
+    }
+
+    var bestScore = 0;
+    var bestTarget;
+
+    this.targets.forEach(item => {
+      score = this.getTargetScore(item);
+
+      if (score > bestScore) {
+        bestTarget = item;
+        bestScore = score;
+      }
+    });
+
+    if (this.attentionTarget !== bestTarget) {
+      // change of attention.
+      if (this.attentionTarget !== null) {
+        this.attentionTarget.emit(this.data.defocusevent);
+      }
+      bestTarget.emit(this.data.focusevent);
+      this.attentionTarget = bestTarget;
+    }
+  },
+
+  getTargetScore: function (target) {
+
+    target.object3D.getWorldPosition(this.targetWorldPosition);
+
+    var camera = this.el;
+    camera.object3D.updateMatrixWorld();
+    this.cameraWorldPosition.setFromMatrixPosition(camera.object3D.matrixWorld);
+
     this.vectorToTarget.subVectors(this.targetWorldPosition,
                                    this.cameraWorldPosition);
-    this.cameraDirectionVector.set(0,0,1);
-    this.cameraDirectionVector.applyEuler(camera.object3D.rotation);
+    this.zeroUnusedVectorAxes(this.vectorToTarget);
 
-    // Overwrite camera data with target object data for any axes we
-    // are configured to not care about.
+    var distance = this.vectorToTarget.length();
+    var angle = 1;
+
+    if (distance < this.data.maxdistance) {
+      // Within range: check angles.
+      this.cameraQuaternion.setFromRotationMatrix(camera.object3D.matrixWorld)
+
+      this.cameraDirectionVector.set(0,0,-1);
+      this.cameraDirectionVector.applyQuaternion(this.cameraQuaternion);
+      this.zeroUnusedVectorAxes(this.cameraDirectionVector);
+
+      angle = this.vectorToTarget.angleTo(this.cameraDirectionVector);
+
+      // if angle > 45 degrees, set angle so high it is impossible to match.
+      if (angle > (Math.PI / 4)) {
+        angle = 1000;
+      }
+    }
+
+    // scoring system that weights small angles, and small distances as both
+    // good.  Max score is 10.
+    var score = 1/(distance + (5 * Math.abs(angle)) + 0.1);
+
+    return(score);
+  },
+
+  zeroUnusedVectorAxes: function(vector) {
     if (!this.data.axes.includes("X")) {
-      this.cameraDirectionVector.x = this.vectorToTarget.x;
+      vector.x = 0;
     }
     if (!this.data.axes.includes("Y")) {
-      this.cameraDirectionVector.y = this.vectorToTarget.y;
+      vector.y = 0;
     }
     if (!this.data.axes.includes("Z")) {
-      this.cameraDirectionVector.z = this.vectorToTarget.z;
-    }
-
-    var angle = this.vectorToTarget.angleTo(this.cameraDirectionVector);
-
-    if (angle < this.fovAngle) {
-      // The element is outside the configured FoV.
-      if (!this.attention) {
-        // change of attention
-        this.attention = true;
-        this.el.emit(this.data.focusevent);
-      }
-    }
-    else {
-      // The element is outside the configured FoV.
-      if (this.attention) {
-        // change of attention
-        this.attention = false;
-        this.el.emit(this.data.defocusevent);
-      }
+      vector.z = 0;
     }
   }
 });
@@ -254,7 +299,7 @@ AFRAME.registerComponent('attention', {
 // Scene jumping.
 AFRAME.registerComponent('scene-jumps', {
   schema: {
-    camera: {type: 'selector', default: "#camera"},    
+    camera: {type: 'selector', default: "#camera"},
     positions: {type: 'array', default: ["0 0 0 0 0 0"]},
     foci: {type: 'array', default: ["a-scene"]}
   },
@@ -516,9 +561,8 @@ AFRAME.registerComponent('tetris-machine', {
     // Create the stand.
     entityEl = document.createElement('a-entity');
     entityEl.setAttribute("id", "stand" + this.data.id);
-    entityEl.setAttribute("proximity", "target:#camera;axes:XZ;start:focus;end:defocus;distance:2.5");
+    //entityEl.setAttribute("attention", `target:#stand${this.data.id};camera:#camera;axes:XZ;start:focus;end:defocus`);
     entityEl.setAttribute("shadow", "receive:true");
-    //entityEl.setAttribute("mixin", "stand");
     entityEl.setAttribute("framed-block",
                           `facecolor: black;
                           framecolor: white;
@@ -527,9 +571,25 @@ AFRAME.registerComponent('tetris-machine', {
                           depth: ${this.standDepth};
                           frame: 0.05`);
     entityEl.setAttribute("position", `${this.xoffset} ${this.data.baseh/2} ${this.zoffset}`);
-    // Dunno if this works...
-    entityEl.setAttribute("event-set__focus", "_event: focus; framed-block.framecolor:#5786b8");
-    entityEl.setAttribute("event-set__defocus", "_event: defocus; framed-block.framecolor:#854c40");
+    entityEl.setAttribute("event-set__focus1", `_event: focus;_target:#stand-focus${this.data.id}; visible:true`);
+    entityEl.setAttribute("event-set__focus2", `_event: focus;_target:#stand${this.data.id}; visible:false`);
+    entityEl.setAttribute("event-set__defocus1", `_event: defocus;_target:#stand-focus${this.data.id}; visible:false`);
+    entityEl.setAttribute("event-set__defocus2", `_event: defocus;_target:#stand${this.data.id}; visible:true`);
+    this.el.appendChild(entityEl);
+
+    // And a second (invisible) stand, yellow rather than white edging.  Switched in to show focus.
+    entityEl = document.createElement('a-entity');
+    entityEl.setAttribute("id", "stand-focus" + this.data.id);
+    entityEl.setAttribute("shadow", "receive:true");
+    entityEl.setAttribute("framed-block",
+                          `facecolor: black;
+                          framecolor: yellow;
+                          width: ${this.standWidth};
+                          height:${this.data.baseh};
+                          depth: ${this.standDepth};
+                          frame: 0.05`);
+    entityEl.setAttribute("position", `${this.xoffset} ${this.data.baseh/2} ${this.zoffset}`);
+    entityEl.setAttribute("visible", false);
     this.el.appendChild(entityEl);
 
     // Label on the stand...
@@ -547,7 +607,7 @@ AFRAME.registerComponent('tetris-machine', {
     entityEl.setAttribute("value", this.data.label);
     this.el.appendChild(entityEl);
 
-    // Create a box at the top that mirrors the stand.
+    // Create a box at the top that mirrors the stand.  We don't have a focus effect for this one.
     entityEl = document.createElement('a-entity');
     entityEl.setAttribute("id", "top" + this.data.id);
     entityEl.setAttribute("framed-block",
@@ -618,7 +678,8 @@ AFRAME.registerComponent('tetris-machine', {
                           levelspeedup: ${this.data.levelspeedup};
                           focus:false`);
     entityEl.setAttribute("hi-score-logger",
-                          `game:${this.data.hiscoreid}`)
+                          `game:${this.data.hiscoreid};
+                           table:#hiscores`)
     entityEl.setAttribute("debug", "true");
     entityEl.setAttribute("position", `${this.glassWidth/2 + 0.5} 1.1 0`);
     entityEl.setAttribute("rotation", "0 -30 0");
@@ -808,21 +869,62 @@ AFRAME.registerComponent('hi-scores-table', {
     url:   {type: 'string', default: "https://tetrisland.pythonanywhere.com/hiscores"},
     games:  {type: 'array', default: ""},
     names:  {type: 'array', default: ""},
-    interval: {type: 'number', default: 5000}
+    interval: {type: 'number', default: 10000},
+    vrcontrols: {type: 'string', default: ""},
+    keyboardcontrols: {type: 'string', default: ""}
   },
 
   init: function() {
     this.httpResponseFunction = this.dataCallback.bind(this);
     this.displayIndex = 0;
+    this.inFocus = false;
+    this.listeners = {
+      focus: this.focus.bind(this),
+      defocus: this.defocus.bind(this),
+      next: this.next.bind(this),
+      prev: this.prev.bind(this),
+      gameover: this.gameover.bind(this),
+    };
+    this.sceneEl = document.querySelector('a-scene');
+    this.jsonData = [];
+    this.dataTimestamps = [];
+    this.lastTickTime = 0;
+    this.data.games.forEach(item => {
+      this.jsonData.push("");
+      this.dataTimestamps.push(-3600001);
+    });
+    this.queryIndex = 0;
   },
 
   update: function() {
-    const gameId = this.data.games[this.displayIndex];
-    const queryURL = `${this.data.url}/list?game=${gameId}&count=5`
-    var xmlHttp = new XMLHttpRequest();
-    xmlHttp.onreadystatechange = this.httpResponseFunction;
-    xmlHttp.open("GET", queryURL, true); // true for asynchronous
-    xmlHttp.send(null);
+
+    if (this.lastTickTime - this.dataTimestamps[this.displayIndex] > 3600000)
+    {
+      // Data is over 60 mins old.  Refresh it.
+      const gameId = this.data.games[this.displayIndex];
+      const queryURL = `${this.data.url}/list?game=${gameId}&count=5`
+      var xmlHttp = new XMLHttpRequest();
+      xmlHttp.onreadystatechange = this.httpResponseFunction;
+      xmlHttp.open("GET", queryURL, true); // true for asynchronous
+      xmlHttp.send(null);
+      this.queryIndex = this.displayIndex;
+    }
+    else
+    {
+      this.presentData(this.jsonData[this.displayIndex]);
+    }
+  },
+
+  play: function () {
+    this.attachEventListeners();
+  },
+
+  pause: function () {
+    this.removeEventListeners();
+  },
+
+  remove: function () {
+    this.pause();
   },
 
   tick: function(time, timeDelta) {
@@ -833,6 +935,7 @@ AFRAME.registerComponent('hi-scores-table', {
 
     if (remainderNow < lastRemainder) {
       // We just crossed a time interval.  So move to the next scoreboard.
+      this.lastTickTime = time;
       this.displayIndex++;
       if (this.displayIndex >= this.data.games.length) {
         this.displayIndex = 0;
@@ -845,7 +948,20 @@ AFRAME.registerComponent('hi-scores-table', {
     if (event.target.readyState == 4 && event.target.status == 200) {
 
       const jsonData = JSON.parse(event.target.responseText);
-      this.presentData(jsonData);
+
+      if (this.queryIndex == this.displayIndex) {
+        // We are still waiting to present this data.
+          this.presentData(jsonData);
+      }
+      else
+      {
+        // User has requested a different page already.
+        this.update();
+      }
+
+      // In any case, store off the data we collected as fresh data.
+      this.jsonData[this.queryIndex] = jsonData;
+      this.dataTimestamps[this.queryIndex] = this.lastTickTime;
     }
   },
 
@@ -862,7 +978,15 @@ AFRAME.registerComponent('hi-scores-table', {
     text += this.showHiScoreTable(jsonData['month']['hiscores']);
     text += "\n==== All Time High Scores ====\n"
     text += this.showHiScoreTable(jsonData['alltime']['hiscores']);
-
+    if (this.inFocus) {
+      if (this.sceneEl.is('vr-mode')) {
+        text += "\n" + this.data.vrcontrols;
+      }
+      else
+      {
+        text += "\n" + this.data.keyboardcontrols;
+      }
+    }
     this.el.setAttribute('text', "value: " + text);
   },
 
@@ -879,19 +1003,82 @@ AFRAME.registerComponent('hi-scores-table', {
 
           text += `| ${(index + 1).toString().padStart('2', ' ')}  ${score}  ${level}  ${mins}:${secs} |\n`
         });
+        for (var ii = hiScoreData.length ; ii < 5; ii++) {
+          text += "\n"
+        }
     }
     else
     {
-      text += "No scores yet - be the first!\n"
+      text += "No scores yet - be the first!\n\n\n\n\n\n"
     }
     return(text)
+  },
+
+  focus: function() {
+    this.inFocus = true;
+  },
+
+  defocus: function() {
+    this.inFocus = false;
+  },
+
+  next: function() {
+
+    if (this.inFocus) {
+      this.displayIndex++;
+      if (this.displayIndex >= this.data.games.length) {
+        this.displayIndex = 0;
+      }
+      this.update();
+
+    }
+  },
+
+  prev: function() {
+    if (this.inFocus) {
+      this.displayIndex--;
+      if (this.displayIndex < 0) {
+        this.displayIndex = this.data.games.length - 1;
+      }
+      this.update();
+    }
+  },
+
+  gameover: function(event) {
+
+    var gameId = event.detail.gameId;
+    var gameIndex = this.data.games.findIndex(x => (x == gameId));
+
+    // Mark the data for this game as aged.
+    this.dataTimestamps[gameIndex] = -3600001;
+
+    // The query will happen next time this game's data is needed...
+  },
+
+  attachEventListeners: function () {
+
+    this.el.addEventListener('focus', this.listeners.focus, false);
+    this.el.addEventListener('defocus', this.listeners.defocus, false);
+    this.el.addEventListener('next', this.listeners.next, false);
+    this.el.addEventListener('prev', this.listeners.prev, false);
+    this.el.addEventListener('gameover', this.listeners.gameover, false);
+  },
+
+  removeEventListeners: function () {
+
+      this.el.removeEventListener('focus', this.listeners.focus);
+      this.el.removeEventListener('defocus', this.listeners.defocus);
+      this.el.removeEventListener('next', this.listeners.next);
+      this.el.removeEventListener('prev', this.listeners.prev);
+      this.el.removeEventListener('gemaover', this.listeners.gameover);
   }
 });
 
 AFRAME.registerComponent('hi-score-logger', {
   schema: {
     url:   {type: 'string', default: "https://tetrisland.pythonanywhere.com/hiscores"},
-    game:  {type: 'string', default: ""}
+    game:  {type: 'string', default: ""},
+    table: {type: 'selector', default: "#hiscores"}
   },
 
   init: function()
@@ -913,5 +1100,10 @@ AFRAME.registerComponent('hi-score-logger', {
     request.open('POST', this.data.url + "/submit" , true);
     request.setRequestHeader("Content-type", "application/json");
     request.send(jsonData);
+
+    // Generate an event to the hi-score table to tell it to refresh.
+    // (even if there's no high score, at least the games-played counter should
+    // go up).
+    this.data.table.emit("gameover", {gameId: this.data.game});
   }
 });
