@@ -358,6 +358,29 @@ const TETRIS_KEYS_LIBRARY = {
          Space=$drop,#rhand.abuttondown=$drop,#rhand.abuttonup=%drop`
 }
 
+const TETRIS_BLOCK_COLORS = [
+  "yellow",
+  "blue",
+  "white",
+  "magenta",
+  "cyan",
+  "green",
+  "red",
+  "#888888",
+  "#FF8800",
+  "#FF0088",
+  "#88FF00",
+  "#00FF88",
+  "#8800FF",
+  "#0088FF",
+  "#FF8888",
+  "#88FF88",
+  "#8888FF",
+  "#88FFFF",
+  "#FFFF88",
+  "#FF88FF"
+]
+
 const TETRIS_CONTROLS_DESKTOP = {
   '2D': `Controls:\n\nEnter to start\n\nMove L/R:\n Z & X\n\nRotate:\nR-Shift/Enter\n\nSpace to drop`,
   '3D': `Controls:\n\nEnter to start\n\nMove in the\nhorizontal plane:\n YGHJ\n\nRotations:\nYaw: 4/6\nPitch: 5/8\nRoll:7/9\n\nSpace to drop`
@@ -387,7 +410,6 @@ AFRAME.registerComponent('tetris-machine', {
     zledge:   {type: 'number', default: 1},
     description: {type: 'string'},
     gametype: {type:'string'},
-    pershapemixin:  {type: 'string'},
     hiscoreid: {type: 'string'},
     levelspeedup: {type: 'number', default: 10},
     clear: {type: 'string', default: "layer"}
@@ -434,6 +456,23 @@ AFRAME.registerComponent('tetris-machine', {
     entityEl.setAttribute("position", `0 ${this.data.baseh} 0`);
     this.el.appendChild(entityEl);
 
+    // In this same position, we create an InstancedMesh and Arena Mixin for each
+    // block color that can land in the arena.
+    const colors = TETRIS_BLOCK_LIBRARY[this.data.shapeset].match(/,/g).length + 1;
+    for (var ii = 0; ii < colors; ii++) {
+      var entityEl = document.createElement('a-entity');
+      entityEl.setAttribute("id", `arena${this.data.id}-mesh${ii}`);
+      entityEl.setAttribute("position", `0 ${this.data.baseh} 0`);
+      entityEl.setAttribute("framed-block", `facecolor: ${TETRIS_BLOCK_COLORS[ii]}; framecolor: black`);
+      entityEl.setAttribute("instanced-mesh", `capacity: ${(this.data.xsize * this.data.zsize * this.data.gameh)}; debug:true`);
+      this.el.appendChild(entityEl);
+
+      var entityEl = document.createElement('a-mixin');
+      entityEl.setAttribute("id", `arena${this.data.id}-mixin${ii}`);
+      entityEl.setAttribute("instanced-mesh-member", `mesh:#arena${this.data.id}-mesh${ii};debug:true`);
+      entityEl.setAttribute("scale", "0.05 0.05 0.05");
+      this.el.appendChild(entityEl);
+    }
     // Create the stand.
     var entityEl = document.createElement('a-entity');
     entityEl.setAttribute("id", "stand" + this.data.id);
@@ -479,9 +518,10 @@ AFRAME.registerComponent('tetris-machine', {
     shapeGenString += "movecontrol: #lhand.thumbstick,#rhand.grip;"
     shapeGenString += "rotatecontrol: #rhand.thumbstick,#rhand.trigger;"
     shapeGenString += `nextshape:#nextShapeContainer${this.data.id};`
-    if (this.data.pershapemixin) {
-      shapeGenString += `pershapemixin:${this.data.pershapemixin};`
-    }
+
+    shapeGenString += `pershapemixin:block;`
+    shapeGenString += `arenapershapemixin:arena${this.data.id}-mixin;`
+
 
     entityEl.setAttribute("shapegenerator", shapeGenString);
 
@@ -680,8 +720,8 @@ init: function () {
 
   // Create material.
   // this.material = new THREE.MeshStandardMaterial({color: data.color1});
-  this.frameMaterial = new THREE.MeshPhongMaterial({color: data.framecolor, roughness: 0.3});
-  this.faceMaterial = new THREE.MeshPhongMaterial({color: data.facecolor, roughness: 1.0});
+  this.frameMaterial = new THREE.MeshStandardMaterial({color: data.framecolor, roughness: 0.3});
+  this.faceMaterial = new THREE.MeshStandardMaterial({color: data.facecolor, roughness: 1.0});
 
   // Create mesh.
   this.mesh = new THREE.Mesh(this.geometry, [this.frameMaterial, this.faceMaterial]);

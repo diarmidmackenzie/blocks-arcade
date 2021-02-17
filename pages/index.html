@@ -15,6 +15,7 @@
     <script src="../src/thumbstick-object-control.js"></script>
     <script src="../src/tetrisland-utils.js"></script>
     <script src="../src/key-bindings.js"></script>
+    <script src="../src/instanced-mesh.js"></script>
   </head>
   <body>
     <a-scene stats renderer="colorManagement:true">
@@ -28,14 +29,22 @@
       <a-entity light="type: ambient; color: #BBB"></a-entity>
       <a-entity light="type: directional; color: #FFF; intensity: 0.6" position="-0.5 1 1"></a-entity>
 
+      <!-- Instanced meshes & mixins used to render the stadium area.-->
+      <a-entity id="stadium-mesh1" framed-block="facecolor: white; framecolor: black" instanced-mesh="capacity:50"></a-entity>
+      <a-entity id="stadium-mesh2" framed-block="facecolor: red; framecolor: black" instanced-mesh="capacity:50"></a-entity>
+      <a-entity id="stadium-mesh3" framed-block="facecolor: green; framecolor: black" instanced-mesh="capacity:50"></a-entity>
+      <a-entity id="stadium-mesh4" framed-block="facecolor: blue; framecolor: black" instanced-mesh="capacity:50"></a-entity>
+      <a-entity id="stadium-mesh5" framed-block="facecolor: yellow; framecolor: black" instanced-mesh="capacity:50"></a-entity>
+      <a-entity id="stadium-mesh6" framed-block="facecolor: magenta; framecolor: black" instanced-mesh="capacity:50"></a-entity>
+      <a-entity id="stadium-mesh7" framed-block="facecolor: cyan; framecolor: black" instanced-mesh="capacity:50"></a-entity>
 
-      <a-mixin id="shape1" framed-block="facecolor: white; framecolor: black" scale = "0.5 0.5 0.5"></a-mixin>
-      <a-mixin id="shape2" framed-block="facecolor: red; framecolor: black" scale = "0.5 0.5 0.5"></a-mixin>
-      <a-mixin id="shape3" framed-block="facecolor: green; framecolor: black" scale = "0.5 0.5 0.5"></a-mixin>
-      <a-mixin id="shape4" framed-block="facecolor: blue; framecolor: black" scale = "0.5 0.5 0.5"></a-mixin>
-      <a-mixin id="shape5" framed-block="facecolor: yellow; framecolor: black" scale = "0.5 0.5 0.5"></a-mixin>
-      <a-mixin id="shape6" framed-block="facecolor: magenta; framecolor: black" scale = "0.5 0.5 0.5"></a-mixin>
-      <a-mixin id="shape7" framed-block="facecolor: cyan; framecolor: black" scale = "0.5 0.5 0.5"></a-mixin>
+      <a-mixin id="shape1" instanced-mesh-member="mesh:#stadium-mesh1" scale = "0.5 0.5 0.5"></a-mixin>
+      <a-mixin id="shape2" instanced-mesh-member="mesh:#stadium-mesh2" scale = "0.5 0.5 0.5"></a-mixin>
+      <a-mixin id="shape3" instanced-mesh-member="mesh:#stadium-mesh3" scale = "0.5 0.5 0.5"></a-mixin>
+      <a-mixin id="shape4" instanced-mesh-member="mesh:#stadium-mesh4" scale = "0.5 0.5 0.5"></a-mixin>
+      <a-mixin id="shape5" instanced-mesh-member="mesh:#stadium-mesh5" scale = "0.5 0.5 0.5"></a-mixin>
+      <a-mixin id="shape6" instanced-mesh-member="mesh:#stadium-mesh6" scale = "0.5 0.5 0.5"></a-mixin>
+      <a-mixin id="shape7" instanced-mesh-member="mesh:#stadium-mesh7" scale = "0.5 0.5 0.5"></a-mixin>
 
   <a-entity id="rig" movement-controls="controls:keyboard"
             key-bindings="bindings:KeyP=jump"
@@ -63,104 +72,104 @@
     </a-entity>-->
   </a-entity>
 
-<a-entity position="0 0.5 0">
+
 <!-- Floor-->
-<a-plane material= "color:black;transparent:true;opacity:0.9" position = "0 -0.5 0" rotation="-90 0 0" scale = "12 12 12"></a-plane>
+<a-plane material= "color:black;transparent:true;opacity:0.9; roughness:0" position = "0 0 0" rotation="-90 0 0" scale = "12 12 12"></a-plane>
 
 <!-- 1st wall-->
-<a-entity position = "-5 0 -6" mixin="shape4"></a-entity>
-<a-entity position = "-4 0 -6" mixin="shape4"></a-entity>
-<a-entity position = "-3 0 -6" mixin="shape4"></a-entity>
-<a-entity position = "-2 0 -6" mixin="shape6"></a-entity>
-<a-entity position = "-1 0 -6" mixin="shape6"></a-entity>
-<a-entity position = "0 0 -6" mixin="shape7"></a-entity>
-<a-entity position = "1 0 -6" mixin="shape5"></a-entity>
-<a-entity position = "2 0 -6" mixin="shape2"></a-entity>
-<a-entity position = "3 0 -6" mixin="shape2"></a-entity>
-<a-entity position = "4 0 -6" mixin="shape4"></a-entity>
-<a-entity position = "5 0 -6" mixin="shape4"></a-entity>
+<a-entity position = "-5 0.5 -6" mixin="shape4"></a-entity>
+<a-entity position = "-4 0.5 -6" mixin="shape4"></a-entity>
+<a-entity position = "-3 0.5 -6" mixin="shape4"></a-entity>
+<a-entity position = "-2 0.5 -6" mixin="shape6"></a-entity>
+<a-entity position = "-1 0.5 -6" mixin="shape6"></a-entity>
+<a-entity position = "0 0.5 -6" mixin="shape7"></a-entity>
+<a-entity position = "1 0.5 -6" mixin="shape5"></a-entity>
+<a-entity position = "2 0.5 -6" mixin="shape2"></a-entity>
+<a-entity position = "3 0.5 -6" mixin="shape2"></a-entity>
+<a-entity position = "4 0.5 -6" mixin="shape4"></a-entity>
+<a-entity position = "5 0.5 -6" mixin="shape4"></a-entity>
 
-<a-entity position = "-5 1 -6" mixin="shape4"></a-entity>
-<a-entity position = "-4 1 -6" mixin="shape3"></a-entity>
-<a-entity position = "-3 1 -6" mixin="shape6"></a-entity>
-<a-entity position = "-2 1 -6" mixin="shape6"></a-entity>
-<a-entity position = "-1 1 -6" mixin="shape7"></a-entity>
-<a-entity position = "0 1 -6" mixin="shape7"></a-entity>
-<a-entity position = "1 1 -6" mixin="shape5"></a-entity>
-<a-entity position = "2 1 -6" mixin="shape2"></a-entity>
-<a-entity position = "3 1 -6" mixin="shape2"></a-entity>
-<a-entity position = "5 1 -6" mixin="shape4"></a-entity>
+<a-entity position = "-5 1.5 -6" mixin="shape4"></a-entity>
+<a-entity position = "-4 1.5 -6" mixin="shape3"></a-entity>
+<a-entity position = "-3 1.5 -6" mixin="shape6"></a-entity>
+<a-entity position = "-2 1.5 -6" mixin="shape6"></a-entity>
+<a-entity position = "-1 1.5 -6" mixin="shape7"></a-entity>
+<a-entity position = "0 1.5 -6" mixin="shape7"></a-entity>
+<a-entity position = "1 1.5 -6" mixin="shape5"></a-entity>
+<a-entity position = "2 1.5 -6" mixin="shape2"></a-entity>
+<a-entity position = "3 1.5 -6" mixin="shape2"></a-entity>
+<a-entity position = "5 1.5 -6" mixin="shape4"></a-entity>
 
-<a-entity position = "-5 2 -6" mixin="shape3"></a-entity>
-<a-entity position = "-4 2 -6" mixin="shape3"></a-entity>
-<a-entity position = "-3 2 -6" mixin="shape3"></a-entity>
+<a-entity position = "-5 2.5 -6" mixin="shape3"></a-entity>
+<a-entity position = "-4 2.5 -6" mixin="shape3"></a-entity>
+<a-entity position = "-3 2.5 -6" mixin="shape3"></a-entity>
 
-<a-entity position = "-1 2 -6" mixin="shape7"></a-entity>
-<a-entity position = "1 2 -6" mixin="shape5"></a-entity>
-<a-entity position = "5 2 -6" mixin="shape4"></a-entity>
+<a-entity position = "-1 2.5 -6" mixin="shape7"></a-entity>
+<a-entity position = "1 2.5 -6" mixin="shape5"></a-entity>
+<a-entity position = "5 2.5 -6" mixin="shape4"></a-entity>
 
-<a-entity position = "1 3 -6" mixin="shape5"></a-entity>
+<a-entity position = "1 3.5 -6" mixin="shape5"></a-entity>
 
 <!-- 2nd wall-->
 
-<a-entity position = "-6 0 -5" mixin="shape5"></a-entity>
-<a-entity position = "-6 0 -4" mixin="shape5"></a-entity>
-<a-entity position = "-6 0 -3" mixin="shape5"></a-entity>
-<a-entity position = "-6 0 -2" mixin="shape5"></a-entity>
-<a-entity position = "-6 0 -1" mixin="shape7"></a-entity>
-<a-entity position = "-6 0 0" mixin="shape7"></a-entity>
-<a-entity position = "-6 0 1" mixin="shape1"></a-entity>
-<a-entity position = "-6 0 2" mixin="shape1"></a-entity>
-<a-entity position = "-6 0 3" mixin="shape1"></a-entity>
-<a-entity position = "-6 0 4" mixin="shape1"></a-entity>
-<a-entity position = "-6 0 5" mixin="shape1"></a-entity>
+<a-entity position = "-6 0.5 -5" mixin="shape5"></a-entity>
+<a-entity position = "-6 0.5 -4" mixin="shape5"></a-entity>
+<a-entity position = "-6 0.5 -3" mixin="shape5"></a-entity>
+<a-entity position = "-6 0.5 -2" mixin="shape5"></a-entity>
+<a-entity position = "-6 0.5 -1" mixin="shape7"></a-entity>
+<a-entity position = "-6 0.5 0" mixin="shape7"></a-entity>
+<a-entity position = "-6 0.5 1" mixin="shape1"></a-entity>
+<a-entity position = "-6 0.5 2" mixin="shape1"></a-entity>
+<a-entity position = "-6 0.5 3" mixin="shape1"></a-entity>
+<a-entity position = "-6 0.5 4" mixin="shape1"></a-entity>
+<a-entity position = "-6 0.5 5" mixin="shape1"></a-entity>
 
-<a-entity position = "-6 1 -5" mixin="shape3"></a-entity>
-<a-entity position = "-6 1 -4" mixin="shape3"></a-entity>
-<a-entity position = "-6 1 -3" mixin="shape3"></a-entity>
-<a-entity position = "-6 1 -2" mixin="shape7"></a-entity>
-<a-entity position = "-6 1 -1" mixin="shape7"></a-entity>
+<a-entity position = "-6 1.5 -5" mixin="shape3"></a-entity>
+<a-entity position = "-6 1.5 -4" mixin="shape3"></a-entity>
+<a-entity position = "-6 1.5 -3" mixin="shape3"></a-entity>
+<a-entity position = "-6 1.5 -2" mixin="shape7"></a-entity>
+<a-entity position = "-6 1.5 -1" mixin="shape7"></a-entity>
 
-<a-entity position = "-6 1 1" mixin="shape1"></a-entity>
+<a-entity position = "-6 1.5 1" mixin="shape1"></a-entity>
 
-<a-entity position = "-6 1 3" mixin="shape2"></a-entity>
-<a-entity position = "-6 1 4" mixin="shape2"></a-entity>
-<a-entity position = "-6 1 5" mixin="shape1"></a-entity>
+<a-entity position = "-6 1.5 3" mixin="shape2"></a-entity>
+<a-entity position = "-6 1.5 4" mixin="shape2"></a-entity>
+<a-entity position = "-6 1.5 5" mixin="shape1"></a-entity>
 
-<a-entity position = "-6 2 -4" mixin="shape3"></a-entity>
-<a-entity position = "-6 2 3" mixin="shape2"></a-entity>
-<a-entity position = "-6 2 4" mixin="shape2"></a-entity>
-<a-entity position = "-6 2 5" mixin="shape1"></a-entity>
+<a-entity position = "-6 2.5 -4" mixin="shape3"></a-entity>
+<a-entity position = "-6 2.5 3" mixin="shape2"></a-entity>
+<a-entity position = "-6 2.5 4" mixin="shape2"></a-entity>
+<a-entity position = "-6 2.5 5" mixin="shape1"></a-entity>
 
 <!-- 3rd wall-->
 
-<a-entity position = "-5 0 6" mixin="shape4"></a-entity>
-<a-entity position = "-4 0 6" mixin="shape4"></a-entity>
-<a-entity position = "-3 0 6" mixin="shape4"></a-entity>
-<a-entity position = "-2 0 6" mixin="shape6"></a-entity>
+<a-entity position = "-5 0.5 6" mixin="shape4"></a-entity>
+<a-entity position = "-4 0.5 6" mixin="shape4"></a-entity>
+<a-entity position = "-3 0.5 6" mixin="shape4"></a-entity>
+<a-entity position = "-2 0.5 6" mixin="shape6"></a-entity>
 
-<a-entity position = "2 0 6" mixin="shape2"></a-entity>
-<a-entity position = "3 0 6" mixin="shape2"></a-entity>
-<a-entity position = "4 0 6" mixin="shape4"></a-entity>
-<a-entity position = "5 0 6" mixin="shape4"></a-entity>
+<a-entity position = "2 0.5 6" mixin="shape2"></a-entity>
+<a-entity position = "3 0.5 6" mixin="shape2"></a-entity>
+<a-entity position = "4 0.5 6" mixin="shape4"></a-entity>
+<a-entity position = "5 0.5 6" mixin="shape4"></a-entity>
 
-<a-entity position = "-5 1 6" mixin="shape4"></a-entity>
-<a-entity position = "-4 1 6" mixin="shape3"></a-entity>
-<a-entity position = "-3 1 6" mixin="shape6"></a-entity>
-<a-entity position = "-2 1 6" mixin="shape6"></a-entity>
+<a-entity position = "-5 1.5 6" mixin="shape4"></a-entity>
+<a-entity position = "-4 1.5 6" mixin="shape3"></a-entity>
+<a-entity position = "-3 1.5 6" mixin="shape6"></a-entity>
+<a-entity position = "-2 1.5 6" mixin="shape6"></a-entity>
 
-<a-entity position = "2 1 6" mixin="shape2"></a-entity>
-<a-entity position = "3 1 6" mixin="shape2"></a-entity>
-<a-entity position = "5 1 6" mixin="shape4"></a-entity>
+<a-entity position = "2 1.5 6" mixin="shape2"></a-entity>
+<a-entity position = "3 1.5 6" mixin="shape2"></a-entity>
+<a-entity position = "5 1.5 6" mixin="shape4"></a-entity>
 
-<a-entity position = "-5 2 6" mixin="shape3"></a-entity>
-<a-entity position = "-4 2 6" mixin="shape3"></a-entity>
-<a-entity position = "-3 2 6" mixin="shape6"></a-entity>
-<a-entity position = "5 2 6" mixin="shape4"></a-entity>
+<a-entity position = "-5 2.5 6" mixin="shape3"></a-entity>
+<a-entity position = "-4 2.5 6" mixin="shape3"></a-entity>
+<a-entity position = "-3 2.5 6" mixin="shape6"></a-entity>
+<a-entity position = "5 2.5 6" mixin="shape4"></a-entity>
 
-<a-entity position = "-4 3 6" mixin="shape3"></a-entity>
+<a-entity position = "-4 3.5 6" mixin="shape3"></a-entity>
 
-<a-entity position = "0 2.5 6" framed-block="facecolor: black; framecolor: white; height:6; depth:1; width:3; frame:0.1">
+<a-entity position = "0 3 6" framed-block="facecolor: black; framecolor: white; height:6; depth:1; width:3; frame:0.1">
 <a-plane text="font:sourcecodepro;xOffset:0.2;color:white;width:1.7"
          color="black"
          position = "0 0 -0.5" rotation = "0 180 0" scale = "2 3 1"
@@ -173,34 +182,32 @@
 
 <!-- 4th wall-->
 
-<a-entity position = "6 0 -5" mixin="shape5"></a-entity>
-<a-entity position = "6 0 -4" mixin="shape1"></a-entity>
-<a-entity position = "6 0 -3" mixin="shape1"></a-entity>
-<a-entity position = "6 0 -2" mixin="shape3"></a-entity>
-<a-entity position = "6 0 -1" mixin="shape2"></a-entity>
-<a-entity position = "6 0 0" mixin="shape2"></a-entity>
-<a-entity position = "6 0 1" mixin="shape7"></a-entity>
-<a-entity position = "6 0 2" mixin="shape7"></a-entity>
-<a-entity position = "6 0 3" mixin="shape1"></a-entity>
-<a-entity position = "6 0 4" mixin="shape1"></a-entity>
-<a-entity position = "6 0 5" mixin="shape1"></a-entity>
+<a-entity position = "6 0.5 -5" mixin="shape5"></a-entity>
+<a-entity position = "6 0.5 -4" mixin="shape1"></a-entity>
+<a-entity position = "6 0.5 -3" mixin="shape1"></a-entity>
+<a-entity position = "6 0.5 -2" mixin="shape3"></a-entity>
+<a-entity position = "6 0.5 -1" mixin="shape2"></a-entity>
+<a-entity position = "6 0.5 0" mixin="shape2"></a-entity>
+<a-entity position = "6 0.5 1" mixin="shape7"></a-entity>
+<a-entity position = "6 0.5 2" mixin="shape7"></a-entity>
+<a-entity position = "6 0.5 3" mixin="shape1"></a-entity>
+<a-entity position = "6 0.5 4" mixin="shape1"></a-entity>
+<a-entity position = "6 0.5 5" mixin="shape1"></a-entity>
 
-<a-entity position = "6 1 -5" mixin="shape5"></a-entity>
-<a-entity position = "6 1 -4" mixin="shape1"></a-entity>
-<a-entity position = "6 1 -3" mixin="shape3"></a-entity>
-<a-entity position = "6 1 -2" mixin="shape3"></a-entity>
-<a-entity position = "6 1 -1" mixin="shape2"></a-entity>
-<a-entity position = "6 1 0" mixin="shape2"></a-entity>
-<a-entity position = "6 1 2" mixin="shape7"></a-entity>
-<a-entity position = "6 1 3" mixin="shape7"></a-entity>
+<a-entity position = "6 1.5 -5" mixin="shape5"></a-entity>
+<a-entity position = "6 1.5 -4" mixin="shape1"></a-entity>
+<a-entity position = "6 1.5 -3" mixin="shape3"></a-entity>
+<a-entity position = "6 1.5 -2" mixin="shape3"></a-entity>
+<a-entity position = "6 1.5 -1" mixin="shape2"></a-entity>
+<a-entity position = "6 1.5 0" mixin="shape2"></a-entity>
+<a-entity position = "6 1.5 2" mixin="shape7"></a-entity>
+<a-entity position = "6 1.5 3" mixin="shape7"></a-entity>
 
-<a-entity position = "6 1 5" mixin="shape1"></a-entity>
-<a-entity position = "6 2 -5" mixin="shape5"></a-entity>
-<a-entity position = "6 2 -4" mixin="shape1"></a-entity>
-<a-entity position = "6 2 -2" mixin="shape3"></a-entity>
-<a-entity position = "6 3 -5" mixin="shape5"></a-entity>
-
-</a-entity>
+<a-entity position = "6 1.5 5" mixin="shape1"></a-entity>
+<a-entity position = "6 2.5 -5" mixin="shape5"></a-entity>
+<a-entity position = "6 2.5 -4" mixin="shape1"></a-entity>
+<a-entity position = "6 2.5 -2" mixin="shape3"></a-entity>
+<a-entity position = "6 3.5 -5" mixin="shape5"></a-entity>
 
 <a-sky segments-height="10" segments-width="32" src="../assets/psych/psych2.jpg"></a-sky>
 
@@ -267,7 +274,6 @@
                           label:Skinny Tetris;
                           xsize:6;zsize:1;
                           hiscoreid:2DTetris6;
-                          pershapemixin:block;
                           description:
                           A twist on the
                           classic 2D Tetris.
@@ -288,7 +294,6 @@
                           label:2D Tetris;
                           xsize:10;zsize:1;
                           hiscoreid:2DTetris10;
-                          pershapemixin:block;
                           description:
                           This is the classic
                           2D Tetris.
@@ -307,7 +312,6 @@
 <a-entity tetris-machine="id:3;shapeset:3DTetris;
                           label:Mini 3D Tetris;
                           xsize:4;zsize:4;
-                          pershapemixin:block;
                           hiscoreid:3DTetris4;
                           description:
                           3D Tetris in the
@@ -333,7 +337,6 @@
 <a-entity tetris-machine="id:4;shapeset:3DTetris;
                           label:3D Tetris;
                           xsize:5;zsize:5;
-                          pershapemixin:block;
                           hiscoreid:3DTetris5;
                           description:
                           This is our 3D
@@ -355,7 +358,6 @@
 <a-entity tetris-machine="id:5;shapeset:3DPentris;
                           label:3D Pentris;
                           xsize:6;zsize:6;
-                          pershapemixin:block;
                           hiscoreid:3DPentris6X;
                           clear:anyline;
                           description:
@@ -380,7 +382,6 @@
 <a-entity tetris-machine="id:6;shapeset:2DPentris;
                           label:2D Pentris;
                           xsize:12;zsize:1;
-                          pershapemixin:block;
                           levelspeedup:0;
                           hiscoreid:2DPentris12S;
                           description:
@@ -414,7 +415,6 @@
 
 <a-entity tetris-machine="id:7;shapeset:2DPentrisEasy;
                           label:2D Pentris Easy;
-                          pershapemixin:block;
                           xsize:10;zsize:1;
                           hiscoreid:2DPentris10R;
                           description:
