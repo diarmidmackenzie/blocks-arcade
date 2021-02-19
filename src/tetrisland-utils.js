@@ -230,6 +230,8 @@ AFRAME.registerComponent('attention', {
     var bestScore = 0;
     var bestTarget;
 
+    this.getCameraInfo();
+
     this.targets.forEach(item => {
       score = this.getTargetScore(item);
 
@@ -249,13 +251,26 @@ AFRAME.registerComponent('attention', {
     }
   },
 
-  getTargetScore: function (target) {
+  // Sets up this.cameraWorldPosition and this.cameraDirectionVector
+  // for use in getTargetScore.
+  // (we only need to do this once, even if checking many targets).
+  getCameraInfo: function () {
 
-    target.object3D.getWorldPosition(this.targetWorldPosition);
-
+    // Camera Position stuff
     var camera = this.el;
     camera.object3D.updateMatrixWorld();
     this.cameraWorldPosition.setFromMatrixPosition(camera.object3D.matrixWorld);
+
+    // Camera Rotation stuff.
+    this.cameraQuaternion.setFromRotationMatrix(camera.object3D.matrixWorld)
+    this.cameraDirectionVector.set(0,0,-1);
+    this.cameraDirectionVector.applyQuaternion(this.cameraQuaternion);
+    this.zeroUnusedVectorAxes(this.cameraDirectionVector);
+  },
+
+  getTargetScore: function (target) {
+
+    target.object3D.getWorldPosition(this.targetWorldPosition);
 
     this.vectorToTarget.subVectors(this.targetWorldPosition,
                                    this.cameraWorldPosition);
@@ -266,11 +281,6 @@ AFRAME.registerComponent('attention', {
 
     if (distance < this.data.maxdistance) {
       // Within range: check angles.
-      this.cameraQuaternion.setFromRotationMatrix(camera.object3D.matrixWorld)
-
-      this.cameraDirectionVector.set(0,0,-1);
-      this.cameraDirectionVector.applyQuaternion(this.cameraQuaternion);
-      this.zeroUnusedVectorAxes(this.cameraDirectionVector);
 
       angle = this.vectorToTarget.angleTo(this.cameraDirectionVector);
 
