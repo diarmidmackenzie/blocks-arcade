@@ -169,20 +169,10 @@ AFRAME.registerComponent('dualtext', {
 
 });
 
+// Attention detector used to enable/disable controls based on attention.
+// This combines distance and camera direction to pick out which of a list
+// of possible targets currently has the player's attention.
 
-/* This is experimental function where controls are enabled/disabled
-* based on direction of view.
-* it is dependent on the "attention" component.
-* Not clear whether this is a good mechanism, and whether we should maintain
-* it.  Proximity-based solutions are probably simpler */
-
-/* After some more effort, couldn't get this to work.
-* Added ability to exclude y axis from proximity measurement, and used that
-*/
-// Simple attention detecor.
-// used to enable/disable controls based on attention.
-// this assumes the "rotation" of the object (e.g. a camera) represents its
-// attention.
 AFRAME.registerComponent('attention', {
   schema: {
     targets: {type: 'array'},
@@ -309,7 +299,6 @@ AFRAME.registerComponent('attention', {
     }
   }
 });
-/* End experimental function */
 
 // Scene jumping.
 AFRAME.registerComponent('scene-jumps', {
