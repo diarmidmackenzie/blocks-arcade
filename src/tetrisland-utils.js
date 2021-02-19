@@ -983,15 +983,17 @@ AFRAME.registerComponent('hi-scores-table', {
     text += this.showHiScoreTable(jsonData['month']['hiscores']);
     text += "\n==== All Time High Scores ====\n"
     text += this.showHiScoreTable(jsonData['alltime']['hiscores']);
+    text += `\n(${this.displayIndex + 1}/${this.data.games.length}) `;
     if (this.inFocus) {
       if (this.sceneEl.is('vr-mode')) {
-        text += "\n" + this.data.vrcontrols;
+        text += this.data.vrcontrols;
       }
       else
       {
-        text += "\n" + this.data.keyboardcontrols;
+        text += this.data.keyboardcontrols;
       }
     }
+
     this.el.setAttribute('text', "value: " + text);
   },
 
@@ -1021,10 +1023,14 @@ AFRAME.registerComponent('hi-scores-table', {
 
   focus: function() {
     this.inFocus = true;
+
+    this.presentData(this.jsonData[this.displayIndex]);
   },
 
   defocus: function() {
     this.inFocus = false;
+
+    this.presentData(this.jsonData[this.displayIndex]);
   },
 
   next: function() {
