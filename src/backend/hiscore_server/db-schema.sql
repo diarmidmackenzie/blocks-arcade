@@ -14,6 +14,8 @@ CREATE TABLE scores (
   level INTEGER CHECK (level >= 0),
   gametime INTEGER CHECK (gametime >= 0),
   vr INTEGER CHECK (vr >= 0),
+  playername VARCHAR(20),
+  platformname VARCHAR(20),
   spare1 INTEGER,
   spare2 INTEGER,
   spare3 INTEGER,
