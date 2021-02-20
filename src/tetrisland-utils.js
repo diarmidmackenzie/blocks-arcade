@@ -479,8 +479,8 @@ const TETRIS_CONTROLS_DESKTOP = {
 }
 
 const TETRIS_CONTROLS_VR = {
-  '2D': `Controls:\nB to start\nMove: Left Thumbstick or\nRight Grip & move\n\nRotate: Right Thumbstick or\nRight Grip & turn\n\nA or X to drop`,
-  '3D': `Controls:\nB to start\nMove: Left Thumbstick or\nRight Grip & move\n\nRotate: Right Thumbstick or\nRight Grip & turn\n\nA or X to drop`
+  '2D': `Controls:\nB to start\nMove: Left Thumbstick\n\nRotate: Right Thumbstick or\nRight Grip & turn\n\nA or X to drop`,
+  '3D': `Controls:\nB to start\nMove: Left Thumbstick\n\nRotate: Right Thumbstick or\nRight Grip & turn\n\nA or X to drop`
 }
 
 AFRAME.registerComponent('tetris-machine', {
@@ -646,8 +646,8 @@ AFRAME.registerComponent('tetris-machine', {
     var shapeGenString = `arena:#arena${this.data.id};`
     shapeGenString += `shapes:${TETRIS_BLOCK_LIBRARY[this.data.shapeset]};`
     shapeGenString += `keys:${TETRIS_KEYS_LIBRARY[this.gametype]};`
-    shapeGenString += "movecontrol: #lhand.thumbstick,#rhand.grip;"
-    shapeGenString += "rotatecontrol: #rhand.thumbstick,#rhand.trigger;"
+    shapeGenString += "movecontrol: #lhand.thumbstick"
+    shapeGenString += "rotatecontrol: #rhand.thumbstick,#rhand.grip;"
     shapeGenString += `nextshape:#nextShapeContainer${this.data.id};`
 
     shapeGenString += `pershapemixin:block;`
