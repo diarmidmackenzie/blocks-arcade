@@ -440,11 +440,14 @@ const TETRIS_BLOCK_LIBRARY = {
   '3D3BlockMulticolor' : "EE,EE,EE,EE,EE,EE,EE",
 }
 const TETRIS_KEYS_LIBRARY = {
-  '2D': `KeyZ=xminus,KeyX=xplus,Enter=zRotMinus,ShiftRight=zRotPlus,Space=$drop,#rhand.abuttondown=$drop,#rhand.abuttonup=%drop`,
+  '2D': `KeyZ=xminus,KeyX=xplus,Enter=zRotMinus,ShiftRight=zRotPlus,Space=$drop,
+         #rhand.abuttondown=$drop,#rhand.abuttonup=%drop,
+         #lhand.xbuttondown=$drop,#lhand.xbuttonup=%drop`,
   '3D': `KeyG=xminus,KeyJ=xplus,KeyY=zminus,KeyH=zplus,
          Numpad8=xRotMinus,Numpad5=xRotPlus,Numpad4=yRotPlus,Numpad6=yRotMinus,
          Numpad7=zRotMinus,Numpad9=zRotPlus,
-         Space=$drop,#rhand.abuttondown=$drop,#rhand.abuttonup=%drop`
+         Space=$drop,#rhand.abuttondown=$drop,#rhand.abuttonup=%drop,
+         #lhand.xbuttondown=$drop,#lhand.xbuttonup=%drop`
 }
 
 const TETRIS_BLOCK_COLORS = [
@@ -476,13 +479,9 @@ const TETRIS_CONTROLS_DESKTOP = {
 }
 
 const TETRIS_CONTROLS_VR = {
-  '2D': `Controls:\nRight trigger to start\nMove: Left Thumbstick or\nRight Grip & move\n\nRotate: Right Thumbstick or\nRight Grip & turn\n\nA or X to drop`,
-  '3D': `Controls:\nRight trigger to start\nMove: Left Thumbstick or\nRight Grip & move\n\nRotate: Right Thumbstick or\nRight Grip & turn\n\nA or X to drop`
+  '2D': `Controls:\nB to start\nMove: Left Thumbstick or\nRight Grip & move\n\nRotate: Right Thumbstick or\nRight Grip & turn\n\nA or X to drop`,
+  '3D': `Controls:\nB to start\nMove: Left Thumbstick or\nRight Grip & move\n\nRotate: Right Thumbstick or\nRight Grip & turn\n\nA or X to drop`
 }
-
-
-
-
 
 AFRAME.registerComponent('tetris-machine', {
   schema: {
@@ -672,8 +671,8 @@ AFRAME.registerComponent('tetris-machine', {
 
   createGameStart: function() {
 
-    // Use box not sphere - huge difference in number of triangles!
-    var entityEl = document.createElement('a-box');
+    // No geometry
+    var entityEl = document.createElement('a-entity');
     entityEl.setAttribute("id", `game${this.data.id}`);
     entityEl.setAttribute("tetrisgame",
                           `generator: #shapegen${this.data.id};
@@ -684,21 +683,15 @@ AFRAME.registerComponent('tetris-machine', {
     entityEl.setAttribute("hi-score-logger",
                           `game:${this.data.hiscoreid};
                            table:#hiscores`)
-    entityEl.setAttribute("debug", "true");
-    entityEl.setAttribute("position", `${this.glassWidth/2 + 0.5} 1.1 0`);
-    entityEl.setAttribute("rotation", "0 -30 0");
-    entityEl.setAttribute("mixin", "glass start");
-    entityEl.setAttribute("src", "start.png");
+    entityEl.setAttribute("position", `${this.glassWidth/2 + 0.5} 0 0`);
     entityEl.setAttribute("key-bindings",
                           `bindings:Enter=start,
+                           #rhand.buttondown=start,
                           #stand${this.data.id}.focus=focus,
                           #stand${this.data.id}.defocus=defocus`);
-    entityEl.setAttribute("event-set__show",
-                          `_target:#help${this.data.id};
-                           _event:game-over; visible:true`);
     entityEl.setAttribute("event-set__hide",
-                          `_target:#help${this.data.id};
-                           _event:started; visible:false`);
+                      `_target:#help${this.data.id};
+                       _event:started; visible:false`);
     this.el.appendChild(entityEl);
 
   },
