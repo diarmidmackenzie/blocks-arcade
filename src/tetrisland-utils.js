@@ -646,7 +646,7 @@ AFRAME.registerComponent('tetris-machine', {
     var shapeGenString = `arena:#arena${this.data.id};`
     shapeGenString += `shapes:${TETRIS_BLOCK_LIBRARY[this.data.shapeset]};`
     shapeGenString += `keys:${TETRIS_KEYS_LIBRARY[this.gametype]};`
-    shapeGenString += "movecontrol: #lhand.thumbstick"
+    shapeGenString += "movecontrol: #lhand.thumbstick;"
     shapeGenString += "rotatecontrol: #rhand.thumbstick,#rhand.grip;"
     shapeGenString += `nextshape:#nextShapeContainer${this.data.id};`
 
@@ -686,7 +686,7 @@ AFRAME.registerComponent('tetris-machine', {
     entityEl.setAttribute("position", `${this.glassWidth/2 + 0.5} 0 0`);
     entityEl.setAttribute("key-bindings",
                           `bindings:Enter=start,
-                           #rhand.buttondown=start,
+                           #rhand.bbuttondown=start,
                           #stand${this.data.id}.focus=focus,
                           #stand${this.data.id}.defocus=defocus`);
     entityEl.setAttribute("event-set__hide",
