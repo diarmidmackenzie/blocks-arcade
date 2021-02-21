@@ -49,6 +49,7 @@
   <a-entity id="rig" movement-controls="controls:keyboard"
             scene-jumps="camera:#camera;
                          positions:0 0 5.5 0 0 0,
+                                   0 0 2.3 -2 0 0,
                                    -1.65 0 1.65 -2 135 0,
                                    -1.8 0 0 -6 90 0,
                                    -1.7 0 -1.7 -6 45 0,
@@ -62,7 +63,7 @@
               camera position="0 1.6 0"
               look-controls
               attention="axes:XZ;start:focus;end:defocus;
-                         targets:#stand1,#stand2,#stand3,#stand4,#stand5,#stand6,#stand7,#hiscores">
+                         targets:#stand1,#stand2,#stand3,#stand4,#stand5,#stand6,#stand7,#stand8,#hiscores">
       <!--<a-text id="log-panel3" value="Keyboard Sim Data" position="-2 2 -4" color="black"></a-text>-->
     </a-entity>
 
@@ -83,8 +84,8 @@
   </a-entity>
 
 <!-- Floor-->
-<a-plane material= "color:black;transparent:true;opacity:0.9" position = "0 1.6 4" rotation="0 0 0" scale = "2 3 1">
-  <a-text width="0.9" text=wrapCount:40 position = "-0.45 0 0" align="left"
+<a-plane material= "color:black;transparent:true;opacity:0.9" position = "0 1.6 4" rotation="0 0 0" height = "3" width = "2">
+  <a-text width="1.8" text=wrapCount:40 position = "-0.9 0 0" align="left"
           dualtext="desktoptext:Welcome to the 3D Tetris Arcade!\n
                  If you have a VR-capable device, enter VR by clicking the icon in the bottom right.  Then walk forwards to enter the Arcade.\n
                  If you are using a desktop computer...\n
@@ -386,5 +387,19 @@
                           This game provides a step up in challenge from classic Tetris, but is not too tricky to get to grips with.\n\n"
           position = "3 0 3" rotation = "0 -135 0">
 </a-entity>
+
+<a-entity id="tutorial" tetris-tutorial="id:8"
+          position = "0 0 0" rotation = "0 0 0">
+</a-entity>
+<a-entity position = "0 1.8 0" rotate-to-face-player>
+<a-plane id="tutorialtextscreen"
+         material= "color:black;transparent:true;opacity:0.9"
+         position = "0 0 0.35" rotation="0 0 0" width = "2" height = "1"
+         visible = "false">
+  <a-text id="tutorialtext" width="1.8" text=wrapCount:40 position = "-0.9 0 0" align="left"
+          dualtext="desktoptext:Tutorial Text Here;vrtext:Tutorial Text Here">
+  </a-text>
+</a-plane>
+<a-entity>
 
 </body>

@@ -349,27 +349,27 @@ AFRAME.registerComponent('scene-jumps', {
   },
 
   keydown: function (event) {
-    switch (event.key) {
-      case "-":
+    switch (event.code) {
+      case "Minus":
         this.jump(-1);
         break;
 
-      case "=":
+      case "Equal":
         this.jump(1);
         break;
 
-      case "0":
-      case "1":
-      case "2":
-      case "3":
-      case "4":
-      case "5":
-      case "6":
-      case "7":
-      case "8":
-      case "9":
+      case "Digit0":
+      case "Digit1":
+      case "Digit2":
+      case "Digit3":
+      case "Digit4":
+      case "Digit5":
+      case "Digit6":
+      case "Digit7":
+      case "Digit8":
+      case "Digit9":
           var prevPosition = this.currentPosition;
-          this.currentPosition = (event.key.charCodeAt(0) - "0".charCodeAt(0));
+          this.currentPosition = (event.code.charCodeAt(5) - "0".charCodeAt(0));
           if (this.currentPosition >= this.positions.length) {
             this.currentPosition = 0;
           }
@@ -437,7 +437,7 @@ const TETRIS_BLOCK_LIBRARY = {
   '2DPentrisEasy': "EEEE,EEEU,EEED,EEUE,EEDE,EEUDE,EEDUE,EEDW,EEUW,DEEU",
   '3D1BlockMulticolor' : ",,,,,,",
   '3D1Block1color' : "",
-  '3D3BlockMulticolor' : "EE,EE,EE,EE,EE,EE,EE",
+  '3D3BlockMulticolor' : "EE,EE,EE,EE,EE,EE,EE"
 }
 const TETRIS_KEYS_LIBRARY = {
   '2D': `KeyZ=xminus,KeyX=xplus,Enter=zRotMinus,ShiftRight=zRotPlus,Space=$drop,
@@ -447,7 +447,9 @@ const TETRIS_KEYS_LIBRARY = {
          Numpad8=xRotMinus,Numpad5=xRotPlus,Numpad4=yRotPlus,Numpad6=yRotMinus,
          Numpad7=zRotMinus,Numpad9=zRotPlus,
          Space=$drop,#rhand.abuttondown=$drop,#rhand.abuttonup=%drop,
-         #lhand.xbuttondown=$drop,#lhand.xbuttonup=%drop`
+         #lhand.xbuttondown=$drop,#lhand.xbuttonup=%drop`,
+  'DropOnly': `Space=$drop,#rhand.abuttondown=$drop,#rhand.abuttonup=%drop,
+               #lhand.xbuttondown=$drop,#lhand.xbuttonup=%drop`
 }
 
 const TETRIS_BLOCK_COLORS = [
@@ -500,7 +502,8 @@ AFRAME.registerComponent('tetris-machine', {
     gametype: {type:'string'},
     hiscoreid: {type: 'string'},
     levelspeedup: {type: 'number', default: 10},
-    clear: {type: 'string', default: "layer"}
+    clear: {type: 'string', default: "layer"},
+    tutorial: {type: 'boolean', default: false}
   },
 
   init: function() {
@@ -527,6 +530,7 @@ AFRAME.registerComponent('tetris-machine', {
     else {
       this.gametype = this.data.gametype
     }
+
     this.createArena();
     this.createShapeGenerator();
     this.createGameStart();
@@ -611,18 +615,19 @@ AFRAME.registerComponent('tetris-machine', {
     this.el.appendChild(entityEl);
 
     // Create a box at the top that mirrors the stand.  We don't have a focus effect for this one.
-    entityEl = document.createElement('a-entity');
-    entityEl.setAttribute("id", "top" + this.data.id);
-    entityEl.setAttribute("framed-block",
-                          `facecolor: black;
-                          framecolor: white;
-                          width: ${this.standWidth};
-                          height: 0.5;
-                          depth: ${this.standDepth};
-                          frame: 0.05`);
-    entityEl.setAttribute("position", `${this.xoffset} ${this.data.baseh + (this.data.gameh * TETRIS_BLOCK_SIZE) + 0.25} ${this.zoffset}`);
-    this.el.appendChild(entityEl);
-
+    if (!this.data.tutorial) {
+      entityEl = document.createElement('a-entity');
+      entityEl.setAttribute("id", "top" + this.data.id);
+      entityEl.setAttribute("framed-block",
+                            `facecolor: black;
+                            framecolor: white;
+                            width: ${this.standWidth};
+                            height: 0.5;
+                            depth: ${this.standDepth};
+                            frame: 0.05`);
+      entityEl.setAttribute("position", `${this.xoffset} ${this.data.baseh + (this.data.gameh * TETRIS_BLOCK_SIZE) + 0.25} ${this.zoffset}`);
+      this.el.appendChild(entityEl);
+    }
 
     // Finally, the glass casing.
 
@@ -648,30 +653,42 @@ AFRAME.registerComponent('tetris-machine', {
     shapeGenString += `keys:${TETRIS_KEYS_LIBRARY[this.gametype]};`
     shapeGenString += "movecontrol: #lhand.thumbstick;"
     shapeGenString += "rotatecontrol: #rhand.thumbstick,#rhand.grip;"
-    shapeGenString += `nextshape:#nextShapeContainer${this.data.id};`
-
+    if (!this.data.tutorial) {
+      shapeGenString += `nextshape:#nextShapeContainer${this.data.id};`
+    }
     shapeGenString += `pershapemixin:block;`
     shapeGenString += `arenapershapemixin:arena${this.data.id}-mixin;`
+    shapeGenString += `tutorial:${this.data.tutorial}`
 
 
     entityEl.setAttribute("shapegenerator", shapeGenString);
 
+    var shapegenheight = (this.data.gameh * TETRIS_BLOCK_SIZE)
+    if (this.data.tutorial) {
+      shapegenheight = (shapegenheight * 3)/4
+    }
     entityEl.setAttribute("position",
-              `0 ${this.data.baseh + (this.data.gameh * TETRIS_BLOCK_SIZE)} 0`);
+              `0 ${this.data.baseh + shapegenheight} 0`);
+
     this.el.appendChild(entityEl);
 
-    // And the "next block" displayer...
-    entityEl = document.createElement('a-entity');
-    entityEl.setAttribute("id", `nextShapeContainer${this.data.id}`);
-    entityEl.setAttribute("position",
-             `-${this.glassWidth/2 + 0.5} ${this.data.baseh + (this.data.gameh * TETRIS_BLOCK_SIZE)} 0`);
-    this.el.appendChild(entityEl);
-
+    if (!this.data.tutorial) {
+      // And the "next block" displayer...
+      entityEl = document.createElement('a-entity');
+      entityEl.setAttribute("id", `nextShapeContainer${this.data.id}`);
+      entityEl.setAttribute("position",
+               `-${this.glassWidth/2 + 0.5} ${this.data.baseh + (this.data.gameh * TETRIS_BLOCK_SIZE)} 0`);
+      this.el.appendChild(entityEl);
+    }
   },
 
   createGameStart: function() {
 
     // No geometry
+    var tutorialParams = "";
+    if (this.data.tutorial) {
+      tutorialParams = "tutorial:true;"
+    }
     var entityEl = document.createElement('a-entity');
     entityEl.setAttribute("id", `game${this.data.id}`);
     entityEl.setAttribute("tetrisgame",
@@ -679,19 +696,39 @@ AFRAME.registerComponent('tetris-machine', {
                           scoreboard: #scoreboard${this.data.id};
                           arena: #arena${this.data.id};
                           levelspeedup: ${this.data.levelspeedup};
-                          focus:false`);
-    entityEl.setAttribute("hi-score-logger",
-                          `game:${this.data.hiscoreid};
-                           table:#hiscores`)
+                          focus:false;
+                          ${tutorialParams}`);
+    if (!this.data.tutorial)
+    {
+      entityEl.setAttribute("hi-score-logger",
+                            `game:${this.data.hiscoreid};
+                             table:#hiscores`)
+    }
     entityEl.setAttribute("position", `${this.glassWidth/2 + 0.5} 0 0`);
+
     entityEl.setAttribute("key-bindings",
                           `bindings:Enter=start,
                            #rhand.bbuttondown=start,
-                          #stand${this.data.id}.focus=focus,
-                          #stand${this.data.id}.defocus=defocus`);
+                           #stand${this.data.id}.focus=focus,
+                           #stand${this.data.id}.defocus=defocus`);
+
     entityEl.setAttribute("event-set__hide",
                       `_target:#help${this.data.id};
                        _event:started; visible:false`);
+    entityEl.setAttribute("event-set__show",
+                       `_target:#help${this.data.id};
+                        _event:game-over; visible:true`);
+
+    if (this.data.tutorial) {
+      // Set visibility controls for tutorial text.
+      entityEl.setAttribute("event-set__tthide",
+                         `_target:#tutorialtextscreen;
+                          _event:game-over; visible:false`);
+      entityEl.setAttribute("event-set__ttshow",
+                          `_target:#tutorialtextscreen;
+                           _event:started; visible:true`);
+    }
+
     this.el.appendChild(entityEl);
 
   },
@@ -710,6 +747,10 @@ AFRAME.registerComponent('tetris-machine', {
                            ${this.zoffset + (this.standDepth /2) + 0.001}`);
     entityEl.setAttribute("value", "Time: 0:00\nLevel: 0\nScore: 0");
     entityEl.setAttribute("color", "white");
+    if (this.data.tutorial) {
+      entityEl.setAttribute("visible", "false");
+    }
+
     this.el.appendChild(entityEl);
 
   },
@@ -725,9 +766,18 @@ AFRAME.registerComponent('tetris-machine', {
                           `${this.xoffset - (this.glassWidth *(2/5))}
                            ${this.data.baseh + (this.data.gameh * TETRIS_BLOCK_SIZE)/2}
                            ${this.zoffset + (this.glassDepth /2) + 0.001}`);
-    entityEl.setAttribute("dualtext",
-                          `desktoptext:${this.data.description}\n\n${TETRIS_CONTROLS_DESKTOP[this.gametype]};
-                           vrtext:${this.data.description}\n\n${TETRIS_CONTROLS_VR[this.gametype]}`);
+     if (!this.data.tutorial) {
+      entityEl.setAttribute("dualtext",
+                            `desktoptext:${this.data.description}\n\n${TETRIS_CONTROLS_DESKTOP[this.gametype]};
+                             vrtext:${this.data.description}\n\n${TETRIS_CONTROLS_VR[this.gametype]}`);
+    }
+    else
+    {
+      entityEl.setAttribute("dualtext",
+                            `desktoptext:Press Enter to start the tutorial;
+                             vrtext:Press A or Trigger to start the tutorial`);
+    }
+
     this.el.appendChild(entityEl);
   }
 
@@ -1113,4 +1163,340 @@ AFRAME.registerComponent('hi-score-logger', {
     // go up).
     this.data.table.emit("gameover", {gameId: this.data.game});
   }
+});
+
+AFRAME.registerComponent('tetris-tutorial', {
+  schema: {
+    id:       {type: 'string'},
+    tutorialtext: {type: 'selector', default: "#tutorialtext"}
+  },
+
+  init: function() {
+    var entityEl = document.createElement('a-entity');
+    entityEl.setAttribute("tetris-machine",
+                          `id: ${this.data.id};
+                          label:Tutorial;
+                          shapeset:3DTetris;
+                          xsize:6;
+                          zsize:6;
+                          gameh:6;
+                          tutorial:true`);
+    this.el.appendChild(entityEl);
+
+    this.listeners = {
+      nextStep: this.nextStep.bind(this)
+    }
+
+    this.currentStep = -1;
+
+    this.steps = [
+      this.step1.bind(this),
+      this.step2.bind(this),
+      this.step3.bind(this),
+      this.step4.bind(this),
+      this.step5.bind(this),
+      this.step6.bind(this),
+      this.step7.bind(this),
+      this.step8.bind(this),
+      this.step9.bind(this)
+    ]
+
+    this.el.addEventListener('nextStep', this.listeners.nextStep, false);
+
+    // Kick things off...
+  },
+
+  play: function () {
+    // get some references to key elements... (these weren't necessarily
+    // created at init/update time, so we grab them now.)
+    this.arena = document.querySelector(`#arena${this.data.id}`);
+    this._arena = this.arena.components.arena;
+    this.generator = document.querySelector(`#shapegen${this.data.id}`);
+    this._generator = this.generator.components.shapegenerator;
+    this._generator.nextShapeChoice = 2;
+  },
+
+  nextStep: function() {
+
+    this.currentStep +=1;
+    if (this.currentStep >= this.steps.length) {
+      this.currentStep = 0;
+    }
+
+    // invoke the function for the next step.
+    this.steps[this.currentStep]();
+  },
+
+  step1: function () {
+
+    this._arena.clearArena();
+
+    // Set up Shape Generator with limited controls (no move/rotate).
+    var shapeGenString = `keys:${TETRIS_KEYS_LIBRARY['DropOnly']};`
+    shapeGenString += "movecontrol:;"
+    shapeGenString += "rotatecontrol:;"
+    this.generator.setAttribute("shapegenerator", shapeGenString);
+
+    this.data.tutorialtext.setAttribute("dualtext",
+    `desktoptext:
+     Welcome to the Tetris Tutorial.
+     When you start a game, shapes will fall into the play area.
+
+     You need to position them to create complete layers of blocks.
+     When a complete layer of blocks is filled in, it will disappear, increasing your play area, and your score.
+
+     Press Space to drop this block into the gap.;
+     vrtext:
+     Welcome to the Tetris Tutorial.
+     When you start a game, shapes will fall into the play area.
+
+     You need to position them to create complete layers of blocks.
+     When a complete layer of blocks is filled in, it will disappear, increasing your play area.
+
+     Press A to drop this block into the gap.`);
+    this._generator.nextShapeChoice = 1;
+    this._generator.generateShape(true);
+
+    // Put some blocks in place to create
+    // an almost-complete layer.
+    this.createBlock(0,    0.05, -0.1, 1);
+    this.createBlock(0.1,  0.05, -0.1, 1);
+    this.createBlock(0.2,  0.05, -0.1, 1);
+    this.createBlock(0.2, 0.05, 0, 4);
+    this.createBlock(-0.1, 0.05, 0.1, 0);
+    this.createBlock(0,    0.05, 0.1, 0);
+    this.createBlock(0.1,  0.05, 0.1, 0);
+    this.createBlock(0.2,  0.05, 0.1, 4);
+    this.createBlock(-0.1, 0.05, 0.2, 1);
+    this.createBlock(0,    0.05, 0.2, 1);
+    this.createBlock(0.1,  0.05, 0.2, 1);
+    this.createBlock(0.2,  0.05, 0.2, 2);
+
+
+  },
+
+  step2: function () {
+
+    this._arena.clearArena();
+
+    // Set up Shape Generator back to normal settings.
+    var shapeGenString = `keys:${TETRIS_KEYS_LIBRARY['3D']};`
+    shapeGenString += "movecontrol: #lhand.thumbstick;"
+    shapeGenString += "rotatecontrol: #rhand.thumbstick,#rhand.grip;"
+    this.generator.setAttribute("shapegenerator", shapeGenString);
+
+    this.data.tutorialtext.setAttribute("dualtext",
+    `desktoptext:
+     You can position shapes by moving them around horizontally.
+
+     Use keys YGHJ (like WASD) to move this block around.
+
+     Try it now!  When you've finished, press Space to drop the shape and move on.;
+     vrtext:
+     You can position shapes by moving them around horizontally.
+
+     Use the left thumbstick to move this block around.
+
+     Try it now!  When you've finished, press A to drop the shape and move on.`);
+    this._generator.nextShapeChoice = 0;
+    this._generator.generateShape(true);
+
+  },
+
+  step3: function () {
+    this._arena.clearArena();
+
+    this.data.tutorialtext.setAttribute("dualtext",
+    `desktoptext:
+     You can also rotate shapes.
+
+     When we are playing in 3D, there are 3 different ways that blocks can be rotated.
+
+     To rotate the shape forwards or backwards (like nodding your head) use 5 & 8 on the number pad.
+
+     Try it now!  When you've finished, press Space to drop the shape and move on.;
+     vrtext:
+     You can also rotate shapes.
+
+     When we are playing in 3D, there are 3 different ways that blocks can be rotated.
+
+     To rotate the shape forwards or backwards (like nodding your head) push the right thumbstick forwards or backwards.
+
+     Try it now!  When you've finished, press A to drop the shape and move on.`);
+    this._generator.nextShapeChoice = 2;
+    this._generator.generateShape(true);
+
+  },
+
+  step4: function () {
+    this._arena.clearArena();
+
+    this.data.tutorialtext.setAttribute("dualtext",
+    `desktoptext:
+     To roll the shape to the left or right (like tilting your head) use the 7 & 9 keys on the number pad.
+
+     Try it now!  When you've finished, press Space to drop the shape and move on.;
+     vrtext:
+     To roll the shape to the left or right (like tilting your head) push the right thumbstick left or right.
+
+     Try it now!  When you've finished, press A to drop the shape and move on.`);
+    this._generator.nextShapeChoice = 3;
+    this._generator.generateShape(true);
+
+  },
+
+
+  step5: function () {
+    this._arena.clearArena();
+
+    this.data.tutorialtext.setAttribute("dualtext",
+    `desktoptext:
+     To turn the shape (like a turntable) use the 4 & 6 keys on the number pad.
+
+     Try it now!  When you've finished, press Space to drop the shape and move on.;
+     vrtext:
+     You can also turn the shape (like a turntable).
+
+     To do this, tilt the entire right controller 90 degrees to a horizontal position.  Now use the right thumbstick to turn the shape.
+
+     Try it now!  When you've finished, press A to drop the shape and move on.`);
+    this._generator.nextShapeChoice = 5;
+    this._generator.generateShape(true);
+
+  },
+
+  step6: function () {
+    this._arena.clearArena();
+
+    this.data.tutorialtext.setAttribute("dualtext",
+    `desktoptext:
+     As you can see, moving into 3D means we have some new shapes that don't appear in 2D Tetris.
+
+     Try rotating this one to discover all the orientations that it can be put into.
+
+     When you've finished, press Space to drop the shape and move on.;
+     vrtext:
+     As an alternative, you can rotate in any direction by holding down the grip button on the right controller, and rotating the entire controller in the same way that you want the shape to rotate.
+
+     If you look at your hand, you'll see a shape appear that will help to guide your movements.
+
+     Try it now!  When you've finished, press A to drop the shape and move on.`);
+    this._generator.nextShapeChoice = 6;
+    this._generator.generateShape(true);
+
+  },
+
+  step7: function () {
+    this._arena.clearArena();
+
+    // Set up Shape Generator & Arena to 2D settings.
+    var shapeGenString = `keys:${TETRIS_KEYS_LIBRARY['2D']};`
+    shapeGenString += `shapes:${TETRIS_BLOCK_LIBRARY['2DTetris']};`
+    this.generator.setAttribute("shapegenerator", shapeGenString);
+
+    // Set up Shape Generator & Arena to 2D settings.
+    var arenaString = `z:1;`
+    this.arena.setAttribute("arena", arenaString);
+
+    this.data.tutorialtext.setAttribute("dualtext",
+    `desktoptext:
+     For 2D games, we use a different (simpler) set of controls.
+
+     Use Z & X to move left and right, and R-Shift and Enter to rotate in either direction.
+
+     Try it now!  When you've finished, press Space to drop the shape and move on.;
+     vrtext:
+     For 2D games, the controls are just the same, but you can only move blocks left and right, and roll the shapes left and right.
+
+     Try it now!  When you've finished, press Space to drop the shape and move on.`);
+
+    this._generator.nextShapeChoice = 2;
+    this._generator.generateShape(true);
+
+  },
+
+  step8: function () {
+
+    // Set up Shape Generator & Arena to 2D settings.
+    var shapeGenString = `keys:${TETRIS_KEYS_LIBRARY['3D']};`
+    shapeGenString += `shapes:${TETRIS_BLOCK_LIBRARY['3DTetris']};`
+    this.generator.setAttribute("shapegenerator", shapeGenString);
+
+    // Set Shape Generator & Arena back to 3D settings.
+    var arenaString = `z:6;`
+    this.arena.setAttribute("arena", arenaString);
+
+    this._arena.clearArena();
+
+    this.data.tutorialtext.setAttribute("dualtext",
+    `desktoptext:
+    The controls are fixed relative to the play area.
+
+    If you try playing from the side or back of the board, you may find the controls confusing.
+
+    You'll find it easiest to stay in a fixed position in front of the play area.  Press keys 1-9 to jump straight to a good position for each game.
+
+    When you are ready to start playing, press Space to drop the shape, and then pick a game to play.;
+    vrtext:
+    As you move around the play area, controls will adapt to your orientation, so you can play the game from any position.
+
+    Try it now!
+
+    That's the end of the Tutorial.  When you have finished, press A to drop the shape, and then choose a game to play.`);
+
+    this._generator.nextShapeChoice = 2;
+    this._generator.generateShape(true);
+  },
+
+  step9: function () {
+    this._arena.clearArena();
+    // Trigger "game over" to reset tutorial to base state.
+    // Simplest way to do this is to declare arena full.  The game engine picks
+    // this up & emits "game-over"
+    this.arena.emit("arena-full");
+  },
+
+  createBlock(x, y, z, color) {
+    var entityEl = document.createElement('a-entity');
+
+    entityEl.setAttribute("mixin", `arena${this.data.id}-mixin${color}`);
+    entityEl.setAttribute("class", "block" + this.arena.id);
+    entityEl.object3D.position.x = x;
+    entityEl.object3D.position.y = y;
+    entityEl.object3D.position.z = z;
+    this.arena.appendChild(entityEl);
+  }
+
+});
+
+// This component only works for elements in the world reference.
+// Only affects rotation about y axis, not x & z.
+AFRAME.registerComponent('rotate-to-face-player', {
+
+  schema : {
+    camera: {type: 'selector', default: "#camera"}
+  },
+
+  tick: function() {
+    this.trackCamera();
+  },
+
+  trackCamera: (function() {
+
+    var vectorToCamera = new THREE.Vector3();
+    var cylindrical = new THREE.Cylindrical();
+
+    return function() {
+      // Get Camera World Position.
+      var camera = this.data.camera;
+      camera.object3D.updateMatrixWorld();
+      vectorToCamera.setFromMatrixPosition(camera.object3D.matrixWorld);
+
+      vectorToCamera.sub(this.el.object3D.position);
+
+      // Determine angle to camera, and set this rotation on the object.
+      cylindrical.setFromVector3(vectorToCamera);
+      this.el.object3D.rotation.y = cylindrical.theta;
+    }
+  })()
 });
