@@ -775,7 +775,7 @@ AFRAME.registerComponent('tetris-machine', {
     {
       entityEl.setAttribute("dualtext",
                             `desktoptext:Press Enter to start the tutorial;
-                             vrtext:Press A or Trigger to start the tutorial`);
+                             vrtext:Press B to start the tutorial`);
     }
 
     this.el.appendChild(entityEl);
