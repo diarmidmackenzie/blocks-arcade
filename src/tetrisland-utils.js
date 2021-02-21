@@ -1243,7 +1243,7 @@ AFRAME.registerComponent('tetris-tutorial', {
      When you start a game, shapes will fall into the play area.
 
      You need to position them to create complete layers of blocks.
-     When a complete layer of blocks is filled in, it will disappear, increasing your play area, and your score.
+     When a complete layer of blocks is filled in, it will disappear, recovering your play area, and increasing your score.
 
      Press Space to drop this block into the gap.;
      vrtext:
@@ -1251,7 +1251,7 @@ AFRAME.registerComponent('tetris-tutorial', {
      When you start a game, shapes will fall into the play area.
 
      You need to position them to create complete layers of blocks.
-     When a complete layer of blocks is filled in, it will disappear, increasing your play area.
+     When a complete layer of blocks is filled in, it will disappear, recovering your play area, and increasing your score.
 
      Press A to drop this block into the gap.`);
     this._generator.nextShapeChoice = 1;
