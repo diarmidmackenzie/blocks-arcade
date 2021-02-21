@@ -900,8 +900,8 @@ init: function () {
 
   // Create material.
   // this.material = new THREE.MeshStandardMaterial({color: data.color1});
-  this.frameMaterial = new THREE.MeshStandardMaterial({color: data.framecolor, roughness: 0.3});
-  this.faceMaterial = new THREE.MeshStandardMaterial({color: data.facecolor, roughness: 1.0});
+  this.frameMaterial = new THREE.MeshPhongMaterial({color: data.framecolor, roughness: 0.3});
+  this.faceMaterial = new THREE.MeshPhongMaterial({color: data.facecolor, roughness: 1.0});
 
   // Create mesh.
   this.mesh = new THREE.Mesh(this.geometry, [this.frameMaterial, this.faceMaterial]);
