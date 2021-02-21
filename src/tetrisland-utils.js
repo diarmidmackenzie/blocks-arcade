@@ -1259,18 +1259,18 @@ AFRAME.registerComponent('tetris-tutorial', {
 
     // Put some blocks in place to create
     // an almost-complete layer.
-    this.createBlock(0,    0.05, -0.1, 1);
+    this.createBlock(-0.1, 0.05, -0.1, 6);
+    this.createBlock(0,    0.05, -0.1, 6);
     this.createBlock(0.1,  0.05, -0.1, 1);
     this.createBlock(0.2,  0.05, -0.1, 1);
-    this.createBlock(0.2, 0.05, 0, 4);
-    this.createBlock(-0.1, 0.05, 0.1, 0);
-    this.createBlock(0,    0.05, 0.1, 0);
-    this.createBlock(0.1,  0.05, 0.1, 0);
-    this.createBlock(0.2,  0.05, 0.1, 4);
-    this.createBlock(-0.1, 0.05, 0.2, 1);
-    this.createBlock(0,    0.05, 0.2, 1);
-    this.createBlock(0.1,  0.05, 0.2, 1);
-    this.createBlock(0.2,  0.05, 0.2, 2);
+    this.createBlock(0.2,  0.05,    0, 4);
+    this.createBlock(0,    0.05,    0, 0);
+    this.createBlock(0.1,  0.05,    0, 0);
+    this.createBlock(0.2,  0.05,  0.1, 4);
+    this.createBlock(-0.1, 0.05,  0.2, 1);
+    this.createBlock(0,    0.05,  0.2, 1);
+    this.createBlock(0.1,  0.05,  0.2, 1);
+    this.createBlock(0.2,  0.05,  0.2, 2);
 
 
   },
