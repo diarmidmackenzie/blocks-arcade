@@ -503,7 +503,8 @@ AFRAME.registerComponent('tetris-machine', {
     hiscoreid: {type: 'string'},
     levelspeedup: {type: 'number', default: 10},
     clear: {type: 'string', default: "layer"},
-    tutorial: {type: 'boolean', default: false}
+    tutorial: {type: 'boolean', default: false},
+    fill: {type: 'number', default: 0}
   },
 
   init: function() {
@@ -536,6 +537,38 @@ AFRAME.registerComponent('tetris-machine', {
     this.createGameStart();
     this.createScoreboard();
     this.createHelpText();
+    if (this.data.fill > 0) {
+      this.fillArena();
+    }
+  },
+
+  fillArena: function() {
+
+    var arena = document.querySelector(`#arena${this.data.id}`);
+
+    for (var ii = 1; ii <= this.data.xsize; ii++) {
+      for (var jj = 1; jj <= this.data.zsize; jj++) {
+        for (var kk = 0; kk < this.data.gameh; kk++) {
+
+          const color = Math.floor(Math.random() * this.data.fill);
+          const x = Math.floor(ii - this.data.xsize/2) * TETRIS_BLOCK_SIZE;
+          const y = TETRIS_BLOCK_SIZE * kk + TETRIS_BLOCK_SIZE/2;
+          const z = Math.floor(jj - this.data.zsize/2) * TETRIS_BLOCK_SIZE;
+          this.createBlock(arena, x, y, z, color);
+        }
+      }
+    }
+  },
+
+  createBlock: function (arena, x, y, z, color) {
+    var entityEl = document.createElement('a-entity');
+
+    entityEl.setAttribute("mixin", `arena${this.data.id}-mixin${color}`);
+    entityEl.setAttribute("class", "blockarena" + this.data.id);
+    entityEl.object3D.position.x = x;
+    entityEl.object3D.position.y = y;
+    entityEl.object3D.position.z = z;
+    arena.appendChild(entityEl);
   },
 
   createArena: function() {
@@ -1499,4 +1532,25 @@ AFRAME.registerComponent('rotate-to-face-player', {
       this.el.object3D.rotation.y = cylindrical.theta;
     }
   })()
+});
+
+AFRAME.registerComponent('tetrisland-floor', {
+
+  init: function () {
+    TILES = 8
+    TILE_SIZE = 1.5
+
+    for (var ii = 0; ii < TILES; ii++) {
+      for (var jj = 0; jj < TILES; jj++) {
+        var entityEl = document.createElement('a-entity');
+        entityEl.setAttribute("id", `floor${ii}${jj}`);
+        entityEl.setAttribute("instanced-mesh-member", "mesh:#floor-mesh1");
+        entityEl.object3D.position.x = (ii - TILES/2) * TILE_SIZE + TILE_SIZE/2;
+        entityEl.object3D.position.y = -1;
+        entityEl.object3D.position.z = (jj - TILES/2) * TILE_SIZE + TILE_SIZE/2;
+
+        this.el.appendChild(entityEl);
+      }
+    }
+  }
 });
