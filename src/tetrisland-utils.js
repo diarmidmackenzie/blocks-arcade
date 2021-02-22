@@ -581,15 +581,25 @@ AFRAME.registerComponent('tetris-machine', {
     entityEl.setAttribute("position", `0 ${this.data.baseh} 0`);
     this.el.appendChild(entityEl);
 
-    // In this same position, we create an InstancedMesh and Arena Mixin for each
-    // block color that can land in the arena.
+    // In this same position, we create an InstancedMesh, and Arena Mixin for
+    // each block color that can land in the arena.
+    // We set a bounding sphere for frustrum culling at the limit of the arena
+    // space.
+    const fccenter = `0 ${this.data.baseh + (this.data.gameh * TETRIS_BLOCK_SIZE)/2} 0`
+    const fcradius = Math.sqrt(this.data.xsize * this.data.xsize +
+                               this.data.zsize * this.data.zsize +
+                               this.data.gameh * this.data.gameh) * TETRIS_BLOCK_SIZE;
+
     const colors = TETRIS_BLOCK_LIBRARY[this.data.shapeset].match(/,/g).length + 1;
     for (var ii = 0; ii < colors; ii++) {
       entityEl = document.createElement('a-entity');
       entityEl.setAttribute("id", `arena${this.data.id}-mesh${ii}`);
       entityEl.setAttribute("position", `0 ${this.data.baseh} 0`);
       entityEl.setAttribute("framed-block", `facecolor: ${TETRIS_BLOCK_COLORS[ii]}; framecolor: black`);
-      entityEl.setAttribute("instanced-mesh", `capacity: ${(this.data.xsize * this.data.zsize * this.data.gameh)}; debug:true`);
+      entityEl.setAttribute("instanced-mesh",
+                            `capacity: ${(this.data.xsize * this.data.zsize * this.data.gameh)};
+                             fccenter:${fccenter};
+                             fcradius:${fcradius}`);
       this.el.appendChild(entityEl);
 
       entityEl = document.createElement('a-mixin');
