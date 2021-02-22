@@ -1066,6 +1066,7 @@ AFRAME.registerComponent('hi-scores-table', {
       this.dataTimestamps.push(-3600001);
     });
     this.queryIndex = 0;
+    this.manualMove = false;
   },
 
   update: function() {
@@ -1107,12 +1108,20 @@ AFRAME.registerComponent('hi-scores-table', {
 
     if (remainderNow < lastRemainder) {
       // We just crossed a time interval.  So move to the next scoreboard.
-      this.lastTickTime = time;
-      this.displayIndex++;
-      if (this.displayIndex >= this.data.games.length) {
-        this.displayIndex = 0;
+      // unless the player moved to this screen in the last interval, in
+      // which case leave it for one more interval before advancing.
+      if (!this.manualMove) {
+        this.lastTickTime = time;
+        this.displayIndex++;
+        if (this.displayIndex >= this.data.games.length) {
+          this.displayIndex = 0;
+        }
+        this.update();
       }
-      this.update();
+      else
+      {
+        this.manualMove = false;
+      }
     }
   },
   dataCallback: function (event) {
@@ -1203,17 +1212,19 @@ AFRAME.registerComponent('hi-scores-table', {
   next: function() {
 
     if (this.inFocus) {
+      this.manualMove = true;
       this.displayIndex++;
       if (this.displayIndex >= this.data.games.length) {
         this.displayIndex = 0;
       }
-      this.update();
 
+      this.update();
     }
   },
 
   prev: function() {
     if (this.inFocus) {
+      this.manualMove = true;
       this.displayIndex--;
       if (this.displayIndex < 0) {
         this.displayIndex = this.data.games.length - 1;
