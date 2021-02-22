@@ -70,11 +70,17 @@
     <a-entity id="lhand"
               oculus-touch-controls="hand: left"
               vive-controls="hand: left"
-              teleport-controls="cameraRig: #rig; teleportOrigin: #camera; button: trigger">
+              teleport-controls="cameraRig: #rig;
+                                 teleportOrigin: #camera;
+                                 button: trigger"
+              gearvr-controls
+              daydream-controls>
     </a-entity>
     <a-entity id="rhand"
               oculus-touch-controls="hand: right"
-              vive-controls="hand: right">
+              vive-controls="hand: right"
+              gearvr-controls
+              daydream-controls>
     </a-entity>
     <!-- Alternative, for debugging on PC...
     <a-entity id="rhand"
