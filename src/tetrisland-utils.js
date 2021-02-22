@@ -479,13 +479,13 @@ const TETRIS_BLOCK_COLORS = [
 ]
 
 const TETRIS_CONTROLS_DESKTOP = {
-  '2D': `Controls:\n\nEnter to start\nMove L/R: Z & X\nRotate: R-Shift/Enter\n\nSpace to drop`,
-  '3D': `Controls:\n\nEnter to start\nMove in the horizontal plane: YGHJ\nRotations:\nYaw: 4/6\nPitch: 5/8\nRoll:7/9\n\nSpace to drop`
+  '2D': `Enter to start\n\nMove L/R: Z & X\n\nRotate: R-Shift/Enter\n\nSpace to drop`,
+  '3D': `Enter to start\n\nMove in the horizontal plane: YGHJ\n\nRotations:\nYaw: 4/6\nPitch: 5/8\nRoll:7/9\n\nSpace to drop`
 }
 
 const TETRIS_CONTROLS_VR = {
-  '2D': `Controls:\nB or Right Trigger to start\nMove: Left Thumbstick\n\nRotate: Right Thumbstick or\nRight Grip & turn\n\nA or X to drop`,
-  '3D': `Controls:\nB or Right Trigger to start\nMove: Left Thumbstick\n\nRotate: Right Thumbstick or\nRight Grip & turn\n\nA or X to drop`
+  '2D': `B or Right Trigger to start\n\nMove: Left Thumbstick\n\nRotate: Right Thumbstick or\nRight Grip & turn\n\nA, X or Right Trigger to drop`,
+  '3D': `B or Right Trigger to start\n\nMove: Left Thumbstick\n\nRotate: Right Thumbstick or\nRight Grip & turn\n\nA, X or Right Trigger to drop`
 }
 
 AFRAME.registerComponent('tetris-machine', {
@@ -633,7 +633,7 @@ AFRAME.registerComponent('tetris-machine', {
       entityEl.setAttribute("event-set__focus3", `_event: focus;_target:#top-focus${this.data.id}; visible:true`);
       entityEl.setAttribute("event-set__focus4", `_event: focus;_target:#top${this.data.id}; visible:false`);
       entityEl.setAttribute("event-set__defocus3", `_event: defocus;_target:#top-focus${this.data.id}; visible:false`);
-      entityEl.setAttribute("event-set__defocus4", `_event: defocus;_target:#top${this.data.id}; visible:true`);      
+      entityEl.setAttribute("event-set__defocus4", `_event: defocus;_target:#top${this.data.id}; visible:true`);
     }
     this.el.appendChild(entityEl);
 
@@ -837,8 +837,8 @@ AFRAME.registerComponent('tetris-machine', {
                            ${this.zoffset + (this.glassDepth /2) + 0.001}`);
      if (!this.data.tutorial) {
       entityEl.setAttribute("dualtext",
-                            `desktoptext:${this.data.description}\n\n${TETRIS_CONTROLS_DESKTOP[this.gametype]};
-                             vrtext:${this.data.description}\n\n${TETRIS_CONTROLS_VR[this.gametype]}`);
+                            `desktoptext:${this.data.description}\n\n\n${TETRIS_CONTROLS_DESKTOP[this.gametype]};
+                             vrtext:${this.data.description}\n\n\n${TETRIS_CONTROLS_VR[this.gametype]}`);
     }
     else
     {
