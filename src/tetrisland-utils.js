@@ -442,13 +442,16 @@ const TETRIS_BLOCK_LIBRARY = {
 const TETRIS_KEYS_LIBRARY = {
   '2D': `KeyZ=xminus,KeyX=xplus,Enter=zRotMinus,ShiftRight=zRotPlus,Space=$drop,
          #rhand.abuttondown=$drop,#rhand.abuttonup=%drop,
+         #rhand.triggerdown=$drop,#rhand.triggerup=%drop,
          #lhand.xbuttondown=$drop,#lhand.xbuttonup=%drop`,
   '3D': `KeyG=xminus,KeyJ=xplus,KeyY=zminus,KeyH=zplus,
          Numpad8=xRotMinus,Numpad5=xRotPlus,Numpad4=yRotPlus,Numpad6=yRotMinus,
          Numpad7=zRotMinus,Numpad9=zRotPlus,
          Space=$drop,#rhand.abuttondown=$drop,#rhand.abuttonup=%drop,
+         #rhand.triggerdown=$drop,#rhand.triggerup=%drop,
          #lhand.xbuttondown=$drop,#lhand.xbuttonup=%drop`,
   'DropOnly': `Space=$drop,#rhand.abuttondown=$drop,#rhand.abuttonup=%drop,
+               #rhand.triggerdown=$drop,#rhand.triggerup=%drop,
                #lhand.xbuttondown=$drop,#lhand.xbuttonup=%drop`
 }
 
@@ -481,8 +484,8 @@ const TETRIS_CONTROLS_DESKTOP = {
 }
 
 const TETRIS_CONTROLS_VR = {
-  '2D': `Controls:\nB to start\nMove: Left Thumbstick\n\nRotate: Right Thumbstick or\nRight Grip & turn\n\nA or X to drop`,
-  '3D': `Controls:\nB to start\nMove: Left Thumbstick\n\nRotate: Right Thumbstick or\nRight Grip & turn\n\nA or X to drop`
+  '2D': `Controls:\nB or Right Trigger to start\nMove: Left Thumbstick\n\nRotate: Right Thumbstick or\nRight Grip & turn\n\nA or X to drop`,
+  '3D': `Controls:\nB or Right Trigger to start\nMove: Left Thumbstick\n\nRotate: Right Thumbstick or\nRight Grip & turn\n\nA or X to drop`
 }
 
 AFRAME.registerComponent('tetris-machine', {
@@ -752,6 +755,7 @@ AFRAME.registerComponent('tetris-machine', {
     entityEl.setAttribute("key-bindings",
                           `bindings:Enter=start,
                            #rhand.bbuttondown=start,
+                           #rhand.triggerdown=start,
                            #stand${this.data.id}.focus=focus,
                            #stand${this.data.id}.defocus=defocus`);
 
@@ -818,7 +822,7 @@ AFRAME.registerComponent('tetris-machine', {
     {
       entityEl.setAttribute("dualtext",
                             `desktoptext:Press Enter to start the tutorial;
-                             vrtext:Press B to start the tutorial`);
+                             vrtext:Press B or Right Trigger to start the tutorial`);
     }
 
     this.el.appendChild(entityEl);
@@ -1391,7 +1395,7 @@ AFRAME.registerComponent('tetris-tutorial', {
      You need to position them to create complete layers of blocks.
      When a complete layer of blocks is filled in, it will disappear, recovering your play area, and increasing your score.
 
-     Press A to drop this block into the gap.`);
+     Press A, X or Right Trigger to drop this block into the gap.`);
     this._generator.nextShapeChoice = 1;
     this._generator.generateShape(true);
 
@@ -1433,7 +1437,7 @@ AFRAME.registerComponent('tetris-tutorial', {
 
      Your controls will only affect the currently active game.
 
-     When you're ready, press A to drop the shape and move on.`);
+     When you're ready, press A, X or Right Trigger to drop the shape and move on.`);
 
     this._generator.nextShapeChoice = 3;
     this._generator.generateShape(true);
@@ -1462,7 +1466,7 @@ AFRAME.registerComponent('tetris-tutorial', {
 
      Use the left thumbstick to move this block around.
 
-     Try it now!  When you've finished, press A to drop the shape and move on.`);
+     Try it now!  When you've finished, press A, X or Right Trigger to drop the shape and move on.`);
     this._generator.nextShapeChoice = 0;
     this._generator.generateShape(true);
 
@@ -1487,7 +1491,7 @@ AFRAME.registerComponent('tetris-tutorial', {
 
      To rotate the shape forwards or backwards (like nodding your head) push the right thumbstick forwards or backwards.
 
-     Try it now!  When you've finished, press A to drop the shape and move on.`);
+     Try it now!  When you've finished, press A, X or Right Trigger to drop the shape and move on.`);
     this._generator.nextShapeChoice = 2;
     this._generator.generateShape(true);
 
@@ -1504,7 +1508,7 @@ AFRAME.registerComponent('tetris-tutorial', {
      vrtext:
      To roll the shape to the left or right (like tilting your head) push the right thumbstick left or right.
 
-     Try it now!  When you've finished, press A to drop the shape and move on.`);
+     Try it now!  When you've finished, press A, X or Right Trigger to drop the shape and move on.`);
     this._generator.nextShapeChoice = 3;
     this._generator.generateShape(true);
 
@@ -1524,7 +1528,7 @@ AFRAME.registerComponent('tetris-tutorial', {
 
      To do this, tilt the entire right controller 90 degrees to a horizontal position.  Now use the right thumbstick to turn the shape.
 
-     Try it now!  When you've finished, press A to drop the shape and move on.`);
+     Try it now!  When you've finished, press A, X or Right Trigger to drop the shape and move on.`);
     this._generator.nextShapeChoice = 5;
     this._generator.generateShape(true);
 
@@ -1545,7 +1549,7 @@ AFRAME.registerComponent('tetris-tutorial', {
 
      If you look at your hand, you'll see a shape appear that will help to guide your movements.
 
-     Try it now!  When you've finished, press A to drop the shape and move on.`);
+     Try it now!  When you've finished, press A, X or Right Trigger to drop the shape and move on.`);
     this._generator.nextShapeChoice = 6;
     this._generator.generateShape(true);
 
@@ -1575,7 +1579,7 @@ AFRAME.registerComponent('tetris-tutorial', {
      vrtext:
      For 2D games, the controls are just the same, but you can only move blocks left and right, and roll the shapes left and right.
 
-     Try it now!  When you've finished, press A to drop the shape and move on.`);
+     Try it now!  When you've finished, press A, X or Right Trigger to drop the shape and move on.`);
 
     this._generator.nextShapeChoice = 2;
     this._generator.generateShape(true);
@@ -1611,7 +1615,7 @@ AFRAME.registerComponent('tetris-tutorial', {
 
     Try it now!
 
-    That's the end of the Tutorial.  When you have finished, press A to drop the shape, and then choose a game to play.`);
+    That's the end of the Tutorial.  When you have finished, press A, X or Right Trigger to drop the shape, and then choose a game to play.`);
 
     this._generator.nextShapeChoice = 2;
     this._generator.generateShape(true);
