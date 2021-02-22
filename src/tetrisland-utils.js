@@ -1333,7 +1333,8 @@ AFRAME.registerComponent('tetris-tutorial', {
       this.step6.bind(this),
       this.step7.bind(this),
       this.step8.bind(this),
-      this.step9.bind(this)
+      this.step9.bind(this),
+      this.step10.bind(this)
     ]
 
     this.el.addEventListener('nextStep', this.listeners.nextStep, false);
@@ -1367,9 +1368,11 @@ AFRAME.registerComponent('tetris-tutorial', {
     this._arena.clearArena();
 
     // Set up Shape Generator with limited controls (no move/rotate).
+    // Empty string results in default values being set, whereas an invalid
+    // string like "none" gets us what we want.
     var shapeGenString = `keys:${TETRIS_KEYS_LIBRARY['DropOnly']};`
-    shapeGenString += "movecontrol:;"
-    shapeGenString += "rotatecontrol:;"
+    shapeGenString += "movecontrol:none;"
+    shapeGenString += "rotatecontrol:none;"
     this.generator.setAttribute("shapegenerator", shapeGenString);
 
     this.data.tutorialtext.setAttribute("dualtext",
@@ -1411,6 +1414,33 @@ AFRAME.registerComponent('tetris-tutorial', {
   },
 
   step2: function () {
+    this._arena.clearArena();
+
+    this.data.tutorialtext.setAttribute("dualtext",
+    `desktoptext:
+     There are lots of different games in this arcade.
+
+     When you look at a nearby game, it becomes active, and the base lights up.  Try looking at another game, and then back at this one.
+
+     Your controls will only affect the currently active game.
+
+     When you're ready, press Space to drop the shape and move on.;
+
+     vrtext:
+     There are lots of different games in this arcade.
+
+     When you look at a nearby game, it becomes active, and the base lights up.  Try looking at another game, and then back at this one.
+
+     Your controls will only affect the currently active game.
+
+     When you're ready, press A to drop the shape and move on.`);
+
+    this._generator.nextShapeChoice = 3;
+    this._generator.generateShape(true);
+
+  },
+
+  step3: function () {
 
     this._arena.clearArena();
 
@@ -1438,7 +1468,7 @@ AFRAME.registerComponent('tetris-tutorial', {
 
   },
 
-  step3: function () {
+  step4: function () {
     this._arena.clearArena();
 
     this.data.tutorialtext.setAttribute("dualtext",
@@ -1463,7 +1493,7 @@ AFRAME.registerComponent('tetris-tutorial', {
 
   },
 
-  step4: function () {
+  step5: function () {
     this._arena.clearArena();
 
     this.data.tutorialtext.setAttribute("dualtext",
@@ -1481,7 +1511,7 @@ AFRAME.registerComponent('tetris-tutorial', {
   },
 
 
-  step5: function () {
+  step6: function () {
     this._arena.clearArena();
 
     this.data.tutorialtext.setAttribute("dualtext",
@@ -1500,7 +1530,7 @@ AFRAME.registerComponent('tetris-tutorial', {
 
   },
 
-  step6: function () {
+  step7: function () {
     this._arena.clearArena();
 
     this.data.tutorialtext.setAttribute("dualtext",
@@ -1521,7 +1551,7 @@ AFRAME.registerComponent('tetris-tutorial', {
 
   },
 
-  step7: function () {
+  step8: function () {
     this._arena.clearArena();
 
     // Set up Shape Generator & Arena to 2D settings.
@@ -1530,6 +1560,8 @@ AFRAME.registerComponent('tetris-tutorial', {
     this.generator.setAttribute("shapegenerator", shapeGenString);
 
     // Set up Shape Generator & Arena to 2D settings.
+    // This can work on the arena, since it is clear (if it was not clear
+    // that would cause all sorts of problems...)
     var arenaString = `z:1;`
     this.arena.setAttribute("arena", arenaString);
 
@@ -1543,14 +1575,14 @@ AFRAME.registerComponent('tetris-tutorial', {
      vrtext:
      For 2D games, the controls are just the same, but you can only move blocks left and right, and roll the shapes left and right.
 
-     Try it now!  When you've finished, press Space to drop the shape and move on.`);
+     Try it now!  When you've finished, press A to drop the shape and move on.`);
 
     this._generator.nextShapeChoice = 2;
     this._generator.generateShape(true);
 
   },
 
-  step8: function () {
+  step9: function () {
 
     // Set up Shape Generator & Arena to 2D settings.
     var shapeGenString = `keys:${TETRIS_KEYS_LIBRARY['3D']};`
@@ -1575,6 +1607,8 @@ AFRAME.registerComponent('tetris-tutorial', {
     vrtext:
     As you move around the play area, controls will adapt to your orientation, so you can play the game from any position.
 
+    If you don't have enough physical space to move around, you can use the left trigger to teleport.
+
     Try it now!
 
     That's the end of the Tutorial.  When you have finished, press A to drop the shape, and then choose a game to play.`);
@@ -1583,7 +1617,7 @@ AFRAME.registerComponent('tetris-tutorial', {
     this._generator.generateShape(true);
   },
 
-  step9: function () {
+  step10: function () {
     this._arena.clearArena();
     // Trigger "game over" to reset tutorial to base state.
     // Simplest way to do this is to declare arena full.  The game engine picks
