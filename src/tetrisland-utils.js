@@ -618,7 +618,7 @@ AFRAME.registerComponent('tetris-machine', {
     entityEl.setAttribute("shadow", "receive:true");
     entityEl.setAttribute("framed-block",
                           `facecolor: black;
-                          framecolor: white;
+                          framecolor: #444444;
                           width: ${this.standWidth};
                           height:${this.data.baseh};
                           depth: ${this.standDepth};
@@ -628,15 +628,22 @@ AFRAME.registerComponent('tetris-machine', {
     entityEl.setAttribute("event-set__focus2", `_event: focus;_target:#stand${this.data.id}; visible:false`);
     entityEl.setAttribute("event-set__defocus1", `_event: defocus;_target:#stand-focus${this.data.id}; visible:false`);
     entityEl.setAttribute("event-set__defocus2", `_event: defocus;_target:#stand${this.data.id}; visible:true`);
+
+    if (!this.data.tutorial) {
+      entityEl.setAttribute("event-set__focus3", `_event: focus;_target:#top-focus${this.data.id}; visible:true`);
+      entityEl.setAttribute("event-set__focus4", `_event: focus;_target:#top${this.data.id}; visible:false`);
+      entityEl.setAttribute("event-set__defocus3", `_event: defocus;_target:#top-focus${this.data.id}; visible:false`);
+      entityEl.setAttribute("event-set__defocus4", `_event: defocus;_target:#top${this.data.id}; visible:true`);      
+    }
     this.el.appendChild(entityEl);
 
-    // And a second (invisible) stand, yellow rather than white edging.  Switched in to show focus.
+    // And a second (invisible) stand, white rather than grey edging.  Switched in to show focus.
     entityEl = document.createElement('a-entity');
     entityEl.setAttribute("id", "stand-focus" + this.data.id);
     entityEl.setAttribute("shadow", "receive:true");
     entityEl.setAttribute("framed-block",
                           `facecolor: black;
-                          framecolor: yellow;
+                          framecolor: white;
                           width: ${this.standWidth};
                           height:${this.data.baseh};
                           depth: ${this.standDepth};
@@ -666,12 +673,27 @@ AFRAME.registerComponent('tetris-machine', {
       entityEl.setAttribute("id", "top" + this.data.id);
       entityEl.setAttribute("framed-block",
                             `facecolor: black;
+                            framecolor: #444444;
+                            width: ${this.standWidth};
+                            height: 0.5;
+                            depth: ${this.standDepth};
+                            frame: 0.05`);
+      entityEl.setAttribute("position", `${this.xoffset} ${this.data.baseh + (this.data.gameh * TETRIS_BLOCK_SIZE) + 0.25} ${this.zoffset}`);
+      this.el.appendChild(entityEl);
+
+      // And a second (invisible) stand, white rather than grey edging.  Switched in to show focus.
+      entityEl = document.createElement('a-entity');
+      entityEl.setAttribute("id", "top-focus" + this.data.id);
+      entityEl.setAttribute("shadow", "receive:true");
+      entityEl.setAttribute("framed-block",
+                            `facecolor: black;
                             framecolor: white;
                             width: ${this.standWidth};
                             height: 0.5;
                             depth: ${this.standDepth};
                             frame: 0.05`);
       entityEl.setAttribute("position", `${this.xoffset} ${this.data.baseh + (this.data.gameh * TETRIS_BLOCK_SIZE) + 0.25} ${this.zoffset}`);
+      entityEl.setAttribute("visible", false);
       this.el.appendChild(entityEl);
     }
 
