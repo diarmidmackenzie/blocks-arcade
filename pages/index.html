@@ -68,12 +68,13 @@
     </a-entity>
 
     <a-entity id="lhand"
-              hand-controls="hand: left"
+              oculus-touch-controls="hand: left"
+              vive-controls="hand: left"
               teleport-controls="cameraRig: #rig; teleportOrigin: #camera; button: trigger">
     </a-entity>
     <a-entity id="rhand"
-              hand-controls="hand: right"
-              teleport-controls="cameraRig: #rig; teleportOrigin: #camera;">
+              oculus-touch-controls="hand: right"
+              vive-controls="hand: right">
     </a-entity>
     <!-- Alternative, for debugging on PC...
     <a-entity id="rhand"
