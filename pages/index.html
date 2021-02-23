@@ -91,22 +91,29 @@
   </a-entity>
 
 <!-- Welcome pane-->
-<a-plane material= "color:black;transparent:true;opacity:0.9" position = "0 1.6 4" rotation="0 0 0" height = "3" width = "2">
-  <a-text width="1.8" text=wrapCount:40 position = "-0.9 0 0" align="left"
-          dualtext="desktoptext:Welcome to the 3D Tetris Arcade!\n
-                 If you have a VR-capable device, enter VR by clicking the icon in the bottom right.  Then walk forwards to enter the Arcade.\n
-                 If you are using a desktop computer...\n
-                 ...use number keys 1-8 to jump to the different machines, 9 for hi-scores, and 0 to return to this point.  Or -/= to jump left and right.\n
-                 ...or use WASD or cursors to move, and the mouse to look around.\n
-                 This experience was designed primarily for VR, but all games can be controlled by either keyboard (on desktop) or 6DoF VR controllers (in VR).\n
-                 More info at https://<URL to be confirmed>;
-                 vrtext:Welcome to the 3D Tetris Arcade!\n
-                 You are now in VR mode.  Walk forwards to enter the Arcade.\n
-                 Walk using the right thumbstick, or teleport using the left trigger.\n
-                 More info at https://<URL to be confirmed>;">
-           </a-text>
+<a-plane material= "color:black" position = "0 1.6 4" rotation="0 0 0" height = "3" width = "2"
+         key-bindings="bindings:Space=next,#rhand.abuttondown=next,#rhand.gripdown=next">
+  <a-text id="welcome-panel" width="1.8" text=wrapCount:40 position = "-0.9 0 0" align="left"
+          dualtext='desktoptext:Welcome to the Tetris Arcade!\n
+    If you have a VR-capable device, enter VR by clicking the icon in the bottom right of the screen.\n
+    If you are using a desktop computer...
+    ... press 1 to jump to the tutorial to get started.\n
+    ... Keys 2-9 will also jump you to useful positions, and 0 will bring you back here.\n
+    You can also use WASD or cursors to move, and the mouse to look around.\n
+    This experience was designed primarily to be played in VR, but all games can be played on desktop usign the keyboard, as well as in VR.\n\n
+    Tetris Arcade developed by Diarmid Mackenzie using A-Frame and Three.js.\n
+    Background scene is "Psychedelica City Area One" by Bernd Kromueller.\n
+    All code is open source and available on GitHub.\n
+    https://github.com/diarmidmackenzie/tetrisland;
+    vrtext:Welcome to the Tetris Arcade!\n
+    You are now in VR mode.  Enter the Arcade by walking forwards, or teleporting using the Left Trigger.\n
+    You will find a basic tutorial directly ahead of you.\n\n
+    Tetris Arcade developed by Diarmid Mackenzie using A-Frame and Three.js.\n
+    Background scene is "Psychedelica City Area One" by Bernd Kromueller.\n
+    All code is open source and available on GitHub.\n
+    https://github.com/diarmidmackenzie/tetrisland'>
+  </a-text>
 </a-plane>
-
 
 <!-- Floor-->
 <a-entity id="floor-mesh1"
@@ -411,7 +418,7 @@
 </a-entity>
 <a-entity position = "0 1.8 0" rotate-to-face-player>
   <a-plane id="tutorialtextscreen"
-           material= "color:black;transparent:true;opacity:0.9"
+           material= "color:black"
            position = "0 0 -0.35" rotation="0 0 0" width = "2" height = "1"
            visible = "false">
     <a-text id="tutorialtext" width="1.8" text=wrapCount:40 position = "-0.9 0 0" align="left"
