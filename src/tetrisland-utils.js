@@ -721,6 +721,9 @@ AFRAME.registerComponent('tetris-machine', {
     shapeGenString += `keys:${TETRIS_KEYS_LIBRARY[this.gametype]};`
     shapeGenString += "movecontrol: #lhand.thumbstick;"
     shapeGenString += "rotatecontrol: #rhand.thumbstick,#rhand.grip;"
+    if (this.gametype == "2D") {
+      shapeGenString += "rotateaxes:Z;"
+    }
     if (!this.data.tutorial) {
       shapeGenString += `nextshape:#nextShapeContainer${this.data.id};`
     }
@@ -1583,6 +1586,7 @@ AFRAME.registerComponent('tetris-tutorial', {
     // Set up Shape Generator & Arena to 2D settings.
     var shapeGenString = `keys:${TETRIS_KEYS_LIBRARY['2D']};`
     shapeGenString += `shapes:${TETRIS_BLOCK_LIBRARY['2DTetris']};`
+    shapeGenString += `rotateaxes:Z;`
     this.generator.setAttribute("shapegenerator", shapeGenString);
 
     // Set up Shape Generator & Arena to 2D settings.
