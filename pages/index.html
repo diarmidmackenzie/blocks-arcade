@@ -209,18 +209,23 @@
 
 <a-entity position = "-4 3.5 6" mixin="shape3"></a-entity>
 
-<a-entity position = "0 3 6" framed-block="facecolor: black; framecolor: white; height:6; depth:1; width:3; frame:0.1">
+<a-entity id="hs-table" position = "0 2 6" framed-block="facecolor: black; framecolor: #444444; height:4; depth:1; width:3; frame:0.1"></a-entity>
+<a-entity id="hs-table-focus" position = "0 2 6" framed-block="facecolor: black; framecolor: white; height:4; depth:1; width:3; frame:0.1" visible="false"></a-entity>
 <a-plane id = "hiscores"
-         text="font:sourcecodepro;xOffset:0.2;color:white;width:1.6"
+         text="font:sourcecodepro;xOffset:0.4;color:white;width:3.2"
          color="black"
-         position = "0 0 -0.5" rotation = "0 180 0" scale = "2 3 1"
+         position = "0 2 5.5" rotation = "0 180 0" width = "2" height = "3"
          hi-scores-table="games:2DTetris6,2DTetris10,3DTetris4,3DTetris5,3DPentris6X,2DPentris12S,2DPentris10R;
                           names:Skinny Tetris,Classic Tetris,Mini 3D Tetris,3D Tetris,3D Pentris,2D Pentris,2D Pentris Easy;
                           keyboardcontrols: Z/X keys for prev/next;
                           vrcontrols: X/Y buttons for prev/next"
-         key-bindings="bindings:KeyZ=prev,KeyX=next,#lhand.xbuttondown=prev,#lhand.ybuttondown=next">
+         key-bindings="bindings:KeyZ=prev,KeyX=next,#lhand.xbuttondown=prev,#lhand.ybuttondown=next"
+         event-set__focus1="_event: focus;_target:#hs-table-focus; visible:true"
+         event-set__focus2="_event: focus;_target:#hs-table; visible:false"
+         event-set__defocus1="_event: defocus;_target:#hs-table-focus; visible:false"
+         event-set__defocus2="_event: defocus;_target:#hs-table; visible:true">
 </a-plane>
-</a-entity>
+
 
 
 
