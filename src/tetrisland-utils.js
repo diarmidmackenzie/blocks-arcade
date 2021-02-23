@@ -1406,19 +1406,19 @@ AFRAME.registerComponent('tetris-tutorial', {
 
     this.data.tutorialtext.setAttribute("dualtext",
     `desktoptext:
-     Welcome to the Tetris Tutorial.
      When you start a game, shapes will fall into the play area.
 
-     You need to position them to create complete layers of blocks.
-     When a complete layer of blocks is filled in, it will disappear, recovering your play area, and increasing your score.
+     Position them to create complete layers of blocks.
+     When a layer of blocks is completed, it disappears, recovering your play area, and increasing your score.
+     You get bous points for filling multiple layers at once.
 
      Press Space to drop this block into the gap.;
      vrtext:
-     Welcome to the Tetris Tutorial.
      When you start a game, shapes will fall into the play area.
 
-     You need to position them to create complete layers of blocks.
-     When a complete layer of blocks is filled in, it will disappear, recovering your play area, and increasing your score.
+     Position them to create complete layers of blocks.
+     When a layer of blocks is completed, it disappears, recovering your play area, and increasing your score.
+     You get bous points for filling multiple layers at once.
 
      Press A, X or Right Trigger to drop this block into the gap.`);
     this._generator.nextShapeChoice = 1;
@@ -1444,6 +1444,12 @@ AFRAME.registerComponent('tetris-tutorial', {
 
   step2: function () {
     this._arena.clearArena();
+
+    // Set up Shape Generator back to normal settings.
+    var shapeGenString = `keys:${TETRIS_KEYS_LIBRARY['3D']};`
+    shapeGenString += "movecontrol: #lhand.thumbstick;"
+    shapeGenString += "rotatecontrol: #rhand.thumbstick,#rhand.grip;"
+    this.generator.setAttribute("shapegenerator", shapeGenString);
 
     this.data.tutorialtext.setAttribute("dualtext",
     `desktoptext:
@@ -1472,12 +1478,6 @@ AFRAME.registerComponent('tetris-tutorial', {
   step3: function () {
 
     this._arena.clearArena();
-
-    // Set up Shape Generator back to normal settings.
-    var shapeGenString = `keys:${TETRIS_KEYS_LIBRARY['3D']};`
-    shapeGenString += "movecontrol: #lhand.thumbstick;"
-    shapeGenString += "rotatecontrol: #rhand.thumbstick,#rhand.grip;"
-    this.generator.setAttribute("shapegenerator", shapeGenString);
 
     this.data.tutorialtext.setAttribute("dualtext",
     `desktoptext:
@@ -1617,6 +1617,7 @@ AFRAME.registerComponent('tetris-tutorial', {
     // Set up Shape Generator & Arena to 2D settings.
     var shapeGenString = `keys:${TETRIS_KEYS_LIBRARY['3D']};`
     shapeGenString += `shapes:${TETRIS_BLOCK_LIBRARY['3DTetris']};`
+    shapeGenString += `rotateaxes:XYZ;`
     this.generator.setAttribute("shapegenerator", shapeGenString);
 
     // Set Shape Generator & Arena back to 3D settings.
