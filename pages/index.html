@@ -2,21 +2,16 @@
   <head>
     <script src="https://aframe.io/releases/1.1.0/aframe.min.js"></script>
     <script src="https://cdn.jsdelivr.net/gh/donmccurdy/aframe-extras@v6.1.1/dist/aframe-extras.min.js"></script>
-    <script src="https://unpkg.com/aframe-event-set-component@4.2.1/dist/aframe-event-set-component.min.js"></script>
-    <script src="https://rawgit.com/fernandojsg/aframe-teleport-controls/master/dist/aframe-teleport-controls.min.js"></script>
-    <script src="https://unpkg.com/aframe-template-component@3.2.1/dist/aframe-template-component.min.js"></script>
-    <!--<script src="https://cdn.jsdelivr.net/gh/diarmidmackenzie/key-bindings@v0.2-alpha/key-bindings.min.js"></script>-->
-    <!--<script src="https://cdn.jsdelivr.net/gh/diarmidmackenzie/6dof-object-control@v0.2.1-alpha/src/6dof-object-control.min.js"></script>-->
-    <!--<script src="https://cdn.jsdelivr.net/gh/diarmidmackenzie/6dof-object-control@v0.2.1-alpha/src/keyboard-hand-controls.min.js"></script>-->
-    <!--<script src="../../tetris-engine/src/tetris.js"></script>-->
-    <script src="../src/tetris.js"></script>
-    <script src="../src/6dof-object-control.js"></script>
-    <script src="../src/keyboard-hand-controls.js"></script>
-    <script src="../src/thumbstick-object-control.js"></script>
-    <script src="../src/tetrisland-utils.js"></script>
-    <script src="../src/key-bindings.js"></script>
-    <script src="../src/instanced-mesh.js"></script>
-  </head>
+    <script src="https://unpkg.com/aframe-event-set-component@5.0.0/dist/aframe-event-set-component.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/fernandojsg/aframe-teleport-controls@master/dist/aframe-teleport-controls.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/diarmidmackenzie/key-bindings@v0.3-alpha/key-bindings.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/diarmidmackenzie/6dof-object-control@v0.5-alpha/src/6dof-object-control.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/diarmidmackenzie/6dof-object-control@v0.5-alpha/src/keyboard-hand-controls.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/diarmidmackenzie/6dof-object-control@v0.5-alpha/src/thumbstick-object-control.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/diarmidmackenzie/instanced-mesh@v0.2-alpha/src/instanced-mesh.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/diarmidmackenzie/tetris-engine@v0.3-alpha/src/tetris.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/diarmidmackenzie/tetrisland@v0.1-alpha/src/tetrisland-utils.min.js"></script>
+</head>
   <body>
     <a-scene renderer="colorManagement:true">
 
@@ -270,7 +265,8 @@
 <a-entity position = "6 2.5 -2" mixin="shape3"></a-entity>
 <a-entity position = "6 3.5 -5" mixin="shape5"></a-entity>
 
-<a-sky segments-height="10" segments-width="32" src="../assets/psych/psych2.jpg"></a-sky>
+<a-sky segments-height="10" segments-width="32"
+   src="https://cdn.jsdelivr.net/gh/diarmidmackenzie/tetrisland@latest/assets/psych/psych2.jpg"></a-sky>
 
 <!--<a-mixin id="cube" geometry="primitive: box;"
          scale="0.1 0.1 0.1"
