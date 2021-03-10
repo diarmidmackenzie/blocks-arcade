@@ -1,3 +1,4 @@
+
 // Simple proximity detector
 AFRAME.registerComponent('proximity', {
   schema: {
@@ -223,7 +224,7 @@ AFRAME.registerComponent('attention', {
     this.getCameraInfo();
 
     this.targets.forEach(item => {
-      score = this.getTargetScore(item);
+      var score = this.getTargetScore(item);
 
       if (score > bestScore) {
         bestTarget = item;
@@ -1704,8 +1705,8 @@ AFRAME.registerComponent('rotate-to-face-player', {
 AFRAME.registerComponent('tetrisland-floor', {
 
   init: function () {
-    TILES = 8
-    TILE_SIZE = 1.5
+    const TILES = 8
+    const TILE_SIZE = 1.5
 
     for (var ii = 0; ii < TILES; ii++) {
       for (var jj = 0; jj < TILES; jj++) {
