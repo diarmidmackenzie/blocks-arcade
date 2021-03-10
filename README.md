@@ -1,5 +1,5 @@
-# tetrisland
- A VR world of Tetris games
+# blocks-arcade
+ A VR world of Falling Blocks games
 
 Still very much under development.   Full documentation to follow.
 
