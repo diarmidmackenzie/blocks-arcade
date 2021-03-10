@@ -8,12 +8,12 @@
     <!--<script src="https://cdn.jsdelivr.net/gh/diarmidmackenzie/key-bindings@v0.2-alpha/key-bindings.min.js"></script>-->
     <!--<script src="https://cdn.jsdelivr.net/gh/diarmidmackenzie/6dof-object-control@v0.2.1-alpha/src/6dof-object-control.min.js"></script>-->
     <!--<script src="https://cdn.jsdelivr.net/gh/diarmidmackenzie/6dof-object-control@v0.2.1-alpha/src/keyboard-hand-controls.min.js"></script>-->
-    <!--<script src="../../tetris-engine/src/tetris.js"></script>-->
-    <script src="../src/tetris.js"></script>
+    <!--<script src="../../blocks-engine/src/blocks.js"></script>-->
+    <script src="../src/blocks.js"></script>
     <script src="../src/6dof-object-control.js"></script>
     <script src="../src/keyboard-hand-controls.js"></script>
     <script src="../src/thumbstick-object-control.js"></script>
-    <script src="../src/tetrisland-utils.js"></script>
+    <script src="../src/blocksarcade-utils.js"></script>
     <script src="../src/key-bindings.js"></script>
     <script src="../src/instanced-mesh.js"></script>
   </head>
@@ -82,66 +82,60 @@
 <!-- matching blue is #5786b8: -->
 <a-mixin id="glass" material="transparent:true;opacity:0.1"></a-mixin>
 
-<a-entity tetris-machine="id:6;shapeset:3DPentris;
-                          label:3D Tetris;
+<a-entity blocks-machine="id:6;shapeset:3D5Blocks;
+                          label:3D 4-Blocks;
                           xsize:5;zsize:5;
                           baseh:0.5;
-                          hiscoreid:3DTetris5;
                           fill:18;
                           description:
                           10 x 10 filled arena for perf testing."
           position = "-4 0 -3" rotation = "0 0 0">
 </a-entity>
 
-<a-entity tetris-machine="id:5;shapeset:3DPentris;
-                          label:3D Tetris;
+<a-entity blocks-machine="id:5;shapeset:3D5Blocks;
+                          label:3D 4-Blocks;
                           xsize:5;zsize:5;
                           baseh:0.5;
-                          hiscoreid:3DTetris5;
                           fill:18;
                           description:
                           10 x 10 filled arena for perf testing."
           position = "-2 0 -3" rotation = "0 0 0">
 </a-entity>
 
-<a-entity tetris-machine="id:1;shapeset:3DPentris;
-                          label:3D Tetris;
+<a-entity blocks-machine="id:1;shapeset:3D5Blocks;
+                          label:3D 4-Blocks;
                           xsize:5;zsize:5;
                           baseh:0.5;
-                          hiscoreid:3DTetris5;
                           fill:18;
                           description:
                           10 x 10 filled arena for perf testing."
           position = "0 0 -3" rotation = "0 0 0">
 </a-entity>
 
-<a-entity tetris-machine="id:2;shapeset:3DPentris;
-                          label:3D Tetris;
+<a-entity blocks-machine="id:2;shapeset:3D5Blocks;
+                          label:3D 4-Blocks;
                           xsize:5;zsize:5;
                           baseh:0.5;
-                          hiscoreid:3DTetris5;
                           fill:18;
                           description:
                           10 x 10 filled arena for perf testing."
           position = "2 0 -3" rotation = "0 0 0">
 </a-entity>
 
-<a-entity tetris-machine="id:3;shapeset:3DPentris;
-                          label:3D Tetris;
+<a-entity blocks-machine="id:3;shapeset:3D5Blocks;
+                          label:3D 4-Blocks;
                           xsize:5;zsize:5;
                           baseh:0.5;
-                          hiscoreid:3DTetris5;
                           fill:18;
                           description:
                           10 x 10 filled arena for perf testing."
           position = "4 0 -3" rotation = "0 0 0">
 </a-entity>
 
-<a-entity tetris-machine="id:4;shapeset:3DPentris;
-                          label:3D Tetris;
+<a-entity blocks-machine="id:4;shapeset:3D5Blocks;
+                          label:3D 4-Blocks;
                           xsize:5;zsize:5;
                           baseh:0.5;
-                          hiscoreid:3DTetris5;
                           fill:18;
                           description:
                           10 x 10 filled arena for perf testing."

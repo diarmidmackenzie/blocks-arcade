@@ -6,12 +6,12 @@
     <!--<script src="https://cdn.jsdelivr.net/gh/diarmidmackenzie/key-bindings@v0.2-alpha/key-bindings.min.js"></script>-->
     <!--<script src="https://cdn.jsdelivr.net/gh/diarmidmackenzie/6dof-object-control@v0.2.1-alpha/src/6dof-object-control.min.js"></script>-->
     <!--<script src="https://cdn.jsdelivr.net/gh/diarmidmackenzie/6dof-object-control@v0.2.1-alpha/src/keyboard-hand-controls.min.js"></script>-->
-    <!--<script src="../../tetris-engine/src/tetris.js"></script>-->
-    <script src="../src/tetris.js"></script>
+    <!--<script src="../../blocks-engine/src/blocks.js"></script>-->
+    <script src="../src/blocks.js"></script>
     <script src="../src/6dof-object-control.js"></script>
     <script src="../src/keyboard-hand-controls.js"></script>
     <script src="../src/thumbstick-object-control.js"></script>
-    <script src="../src/tetrisland-utils.js"></script>
+    <script src="../src/blocksarcade-utils.js"></script>
     <script src="../src/key-bindings.js"></script>
     <script src="../src/instanced-mesh.js"></script>
   </head>
@@ -49,7 +49,7 @@
 <!-- Floor-->
 <a-entity id="floor-mesh1"
        bevelled-tile="facecolor: #020202; framecolor: black; width: 1.5; depth:1.5; frame: 0.015"
-       instanced-mesh="capacity:150" tetrisland-floor
+       instanced-mesh="capacity:150" blocks-arcade-floor
        position = "0 0 0"></a-entity>
 
 <a-mixin id="stand" framed-block="facecolor: black; framecolor: white" scale = "0.3 0.25 0.3"></a-mixin>
@@ -78,7 +78,7 @@
 <a-mixin id="glass" material="transparent:true;opacity:0.1"></a-mixin>
 
 
-<a-entity id="tutorial" tetris-tutorial="id:8"
+<a-entity id="tutorial" blocks-tutorial="id:8"
           position = "0 0 -3" rotation = "0 0 0">
 </a-entity>
 <a-entity position = "0 1.8 -3" rotate-to-face-player>
