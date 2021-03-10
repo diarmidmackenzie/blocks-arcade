@@ -87,8 +87,8 @@ AFRAME.registerComponent('proximity', {
 });
 
 // Usage example:
-// this-inspector__1="field:focus;logger:#camera-logger;component:tetrisgame",
-// this-inspector__2="field:listeners.focus;logger:#camera-logger2;component:tetrisgame"
+// this-inspector__1="field:focus;logger:#camera-logger;component:blocksgame",
+// this-inspector__2="field:listeners.focus;logger:#camera-logger2;component:blocksgame"
 
 AFRAME.registerComponent('this-inspector', {
   multiple: true,
@@ -429,18 +429,18 @@ AFRAME.registerComponent('scene-jumps', {
   }
 });
 
-const TETRIS_BLOCK_SIZE = 0.1;
-const TETRIS_BLOCK_LIBRARY = {
-  '2DTetris' : "EEE,EEU,EED,EUE,EDE,EUDE,EUW",
-  '3DTetris' : "EEE,EEN,ENE,ENSE,ENW,ENSU,ENU",
-  '2DPentris': "EEEE,EEEU,EEED,EEUE,EEDE,EEUDE,EEDUE,EEDD,EEDW,EEUW,EEWDD,EDED,EDEWD,WDWED,EUDDUE,DEEU,DEED,UEEU",
-  '3DPentris': "EEEE,EEES,EESE,EESS,EESW,EEWSS,ESES,ESEWS,EUDDUE,SEEN,SEES,EESU,EESD,EEWSD,ESEU,ESED,ESEWU,ESEWD",
-  '2DPentrisEasy': "EEEE,EEEU,EEED,EEUE,EEDE,EEUDE,EEDUE,EEDW,EEUW,DEEU",
+const BLOCKS_BLOCK_SIZE = 0.1;
+const BLOCKS_BLOCK_LIBRARY = {
+  '2D4Blocks' : "EEE,EEU,EED,EUE,EDE,EUDE,EUW",
+  '3D4Blocks' : "EEE,EEN,ENE,ENSE,ENW,ENSU,ENU",
+  '2D5Blocks': "EEEE,EEEU,EEED,EEUE,EEDE,EEUDE,EEDUE,EEDD,EEDW,EEUW,EEWDD,EDED,EDEWD,WDWED,EUDDUE,DEEU,DEED,UEEU",
+  '3D5Blocks': "EEEE,EEES,EESE,EESS,EESW,EEWSS,ESES,ESEWS,EUDDUE,SEEN,SEES,EESU,EESD,EEWSD,ESEU,ESED,ESEWU,ESEWD",
+  '2D5BlocksEasy': "EEEE,EEEU,EEED,EEUE,EEDE,EEUDE,EEDUE,EEDW,EEUW,DEEU",
   '3D1BlockMulticolor' : ",,,,,,",
   '3D1Block1color' : "",
   '3D3BlockMulticolor' : "EE,EE,EE,EE,EE,EE,EE"
 }
-const TETRIS_KEYS_LIBRARY = {
+const BLOCKS_KEYS_LIBRARY = {
   '2D': `KeyZ=xminus,KeyX=xplus,Enter=zRotMinus,ShiftRight=zRotPlus,Space=$drop,
          #rhand.abuttondown=$drop,#rhand.abuttonup=%drop,
          #rhand.triggerdown=$drop,#rhand.triggerup=%drop,
@@ -456,7 +456,7 @@ const TETRIS_KEYS_LIBRARY = {
                #lhand.xbuttondown=$drop,#lhand.xbuttonup=%drop`
 }
 
-const TETRIS_BLOCK_COLORS = [
+const BLOCKS_BLOCK_COLORS = [
   "yellow",
   "blue",
   "white",
@@ -479,17 +479,17 @@ const TETRIS_BLOCK_COLORS = [
   "#FF88FF"
 ]
 
-const TETRIS_CONTROLS_DESKTOP = {
+const BLOCKS_CONTROLS_DESKTOP = {
   '2D': `Enter to start\n\nMove L/R: Z & X\n\nRotate: R-Shift/Enter\n\nSpace to drop`,
   '3D': `Enter to start\n\nMove in the horizontal plane: YGHJ\n\nRotations:\nYaw: 4/6\nPitch: 5/8\nRoll:7/9\n\nSpace to drop`
 }
 
-const TETRIS_CONTROLS_VR = {
+const BLOCKS_CONTROLS_VR = {
   '2D': `B or Right Trigger to start\n\nMove: Left Thumbstick\n\nRotate: Right Thumbstick or\nRight Grip & turn\n\nA, X or Right Trigger to drop`,
   '3D': `B or Right Trigger to start\n\nMove: Left Thumbstick\n\nRotate: Right Thumbstick or\nRight Grip & turn\n\nA, X or Right Trigger to drop`
 }
 
-AFRAME.registerComponent('tetris-machine', {
+AFRAME.registerComponent('blocks-machine', {
   schema: {
     id:       {type: 'string'},
     shapeset: {type: 'string'},
@@ -520,13 +520,13 @@ AFRAME.registerComponent('tetris-machine', {
 
     // However, we offset most pieces (not the shape dropper) by half a block
     // where the play-space dimensions are even.
-    this.xoffset = ((1 - (this.data.xsize % 2)) * TETRIS_BLOCK_SIZE)/2;
-    this.zoffset = ((1 - (this.data.zsize % 2)) * TETRIS_BLOCK_SIZE)/2;
-    this.glassWidth = (this.data.xsize + 2 * (this.data.xspace)) * TETRIS_BLOCK_SIZE
-    this.glassDepth = (this.data.zsize + 2 * (this.data.zspace)) * TETRIS_BLOCK_SIZE
+    this.xoffset = ((1 - (this.data.xsize % 2)) * BLOCKS_BLOCK_SIZE)/2;
+    this.zoffset = ((1 - (this.data.zsize % 2)) * BLOCKS_BLOCK_SIZE)/2;
+    this.glassWidth = (this.data.xsize + 2 * (this.data.xspace)) * BLOCKS_BLOCK_SIZE
+    this.glassDepth = (this.data.zsize + 2 * (this.data.zspace)) * BLOCKS_BLOCK_SIZE
 
-    this.standWidth = this.glassWidth + (this.data.xledge * TETRIS_BLOCK_SIZE);
-    this.standDepth = this.glassDepth + (this.data. zledge * TETRIS_BLOCK_SIZE);
+    this.standWidth = this.glassWidth + (this.data.xledge * BLOCKS_BLOCK_SIZE);
+    this.standDepth = this.glassDepth + (this.data. zledge * BLOCKS_BLOCK_SIZE);
 
     // Gametype is "2D" or "3D"
     if (!this.data.gametype) {
@@ -555,9 +555,9 @@ AFRAME.registerComponent('tetris-machine', {
         for (var kk = 0; kk < this.data.gameh; kk++) {
 
           const color = Math.floor(Math.random() * this.data.fill);
-          const x = Math.floor(ii - this.data.xsize/2) * TETRIS_BLOCK_SIZE;
-          const y = TETRIS_BLOCK_SIZE * kk + TETRIS_BLOCK_SIZE/2;
-          const z = Math.floor(jj - this.data.zsize/2) * TETRIS_BLOCK_SIZE;
+          const x = Math.floor(ii - this.data.xsize/2) * BLOCKS_BLOCK_SIZE;
+          const y = BLOCKS_BLOCK_SIZE * kk + BLOCKS_BLOCK_SIZE/2;
+          const z = Math.floor(jj - this.data.zsize/2) * BLOCKS_BLOCK_SIZE;
           this.createBlock(arena, x, y, z, color);
         }
       }
@@ -589,17 +589,17 @@ AFRAME.registerComponent('tetris-machine', {
     // each block color that can land in the arena.
     // We set a bounding sphere for frustrum culling at the limit of the arena
     // space.
-    const fccenter = `0 ${this.data.baseh + (this.data.gameh * TETRIS_BLOCK_SIZE)/2} 0`
+    const fccenter = `0 ${this.data.baseh + (this.data.gameh * BLOCKS_BLOCK_SIZE)/2} 0`
     const fcradius = Math.sqrt(this.data.xsize * this.data.xsize +
                                this.data.zsize * this.data.zsize +
-                               this.data.gameh * this.data.gameh) * TETRIS_BLOCK_SIZE;
+                               this.data.gameh * this.data.gameh) * BLOCKS_BLOCK_SIZE;
 
-    const colors = TETRIS_BLOCK_LIBRARY[this.data.shapeset].match(/,/g).length + 1;
+    const colors = BLOCKS_BLOCK_LIBRARY[this.data.shapeset].match(/,/g).length + 1;
     for (var ii = 0; ii < colors; ii++) {
       entityEl = document.createElement('a-entity');
       entityEl.setAttribute("id", `arena${this.data.id}-mesh${ii}`);
       entityEl.setAttribute("position", `0 ${this.data.baseh} 0`);
-      entityEl.setAttribute("framed-block", `facecolor: ${TETRIS_BLOCK_COLORS[ii]}; framecolor: black`);
+      entityEl.setAttribute("framed-block", `facecolor: ${BLOCKS_BLOCK_COLORS[ii]}; framecolor: black`);
       entityEl.setAttribute("instanced-mesh",
                             `capacity: ${(this.data.xsize * this.data.zsize * this.data.gameh)};
                              fccenter:${fccenter};
@@ -679,7 +679,7 @@ AFRAME.registerComponent('tetris-machine', {
                             height: 0.5;
                             depth: ${this.standDepth};
                             frame: 0.05`);
-      entityEl.setAttribute("position", `${this.xoffset} ${this.data.baseh + (this.data.gameh * TETRIS_BLOCK_SIZE) + 0.25} ${this.zoffset}`);
+      entityEl.setAttribute("position", `${this.xoffset} ${this.data.baseh + (this.data.gameh * BLOCKS_BLOCK_SIZE) + 0.25} ${this.zoffset}`);
       this.el.appendChild(entityEl);
 
       // And a second (invisible) stand, white rather than grey edging.  Switched in to show focus.
@@ -693,7 +693,7 @@ AFRAME.registerComponent('tetris-machine', {
                             height: 0.5;
                             depth: ${this.standDepth};
                             frame: 0.05`);
-      entityEl.setAttribute("position", `${this.xoffset} ${this.data.baseh + (this.data.gameh * TETRIS_BLOCK_SIZE) + 0.25} ${this.zoffset}`);
+      entityEl.setAttribute("position", `${this.xoffset} ${this.data.baseh + (this.data.gameh * BLOCKS_BLOCK_SIZE) + 0.25} ${this.zoffset}`);
       entityEl.setAttribute("visible", false);
       this.el.appendChild(entityEl);
     }
@@ -706,7 +706,7 @@ AFRAME.registerComponent('tetris-machine', {
     entityEl.setAttribute("width", this.glassWidth + 0.002);
     entityEl.setAttribute("depth", this.glassDepth + 0.002);
     entityEl.setAttribute("position", `${this.xoffset}
-                    ${this.data.baseh + (this.data.gameh * TETRIS_BLOCK_SIZE)/2}
+                    ${this.data.baseh + (this.data.gameh * BLOCKS_BLOCK_SIZE)/2}
                     ${this.zoffset}`);
     this.el.appendChild(entityEl);
 
@@ -718,8 +718,8 @@ AFRAME.registerComponent('tetris-machine', {
     entityEl.setAttribute("id", `shapegen${this.data.id}`);
 
     var shapeGenString = `arena:#arena${this.data.id};`
-    shapeGenString += `shapes:${TETRIS_BLOCK_LIBRARY[this.data.shapeset]};`
-    shapeGenString += `keys:${TETRIS_KEYS_LIBRARY[this.gametype]};`
+    shapeGenString += `shapes:${BLOCKS_BLOCK_LIBRARY[this.data.shapeset]};`
+    shapeGenString += `keys:${BLOCKS_KEYS_LIBRARY[this.gametype]};`
     shapeGenString += "movecontrol: #lhand.thumbstick;"
     shapeGenString += "rotatecontrol: #rhand.thumbstick,#rhand.grip;"
     if (this.gametype == "2D") {
@@ -735,7 +735,7 @@ AFRAME.registerComponent('tetris-machine', {
 
     entityEl.setAttribute("shapegenerator", shapeGenString);
 
-    var shapegenheight = (this.data.gameh * TETRIS_BLOCK_SIZE)
+    var shapegenheight = (this.data.gameh * BLOCKS_BLOCK_SIZE)
     if (this.data.tutorial) {
       shapegenheight = (shapegenheight * 3)/4
     }
@@ -749,7 +749,7 @@ AFRAME.registerComponent('tetris-machine', {
       entityEl = document.createElement('a-entity');
       entityEl.setAttribute("id", `nextShapeContainer${this.data.id}`);
       entityEl.setAttribute("position",
-               `-${this.glassWidth/2 + 0.5} ${this.data.baseh + (this.data.gameh * TETRIS_BLOCK_SIZE)} 0`);
+               `-${this.glassWidth/2 + 0.5} ${this.data.baseh + (this.data.gameh * BLOCKS_BLOCK_SIZE)} 0`);
       this.el.appendChild(entityEl);
     }
   },
@@ -763,7 +763,7 @@ AFRAME.registerComponent('tetris-machine', {
     }
     var entityEl = document.createElement('a-entity');
     entityEl.setAttribute("id", `game${this.data.id}`);
-    entityEl.setAttribute("tetrisgame",
+    entityEl.setAttribute("blocksgame",
                           `generator: #shapegen${this.data.id};
                           scoreboard: #scoreboard${this.data.id};
                           arena: #arena${this.data.id};
@@ -816,7 +816,7 @@ AFRAME.registerComponent('tetris-machine', {
     entityEl.setAttribute("align", "left");
     entityEl.setAttribute("position",
                           `${this.xoffset + 0.5}
-                           ${this.data.baseh + (this.data.gameh * TETRIS_BLOCK_SIZE) + 0.25}
+                           ${this.data.baseh + (this.data.gameh * BLOCKS_BLOCK_SIZE) + 0.25}
                            ${this.zoffset + (this.standDepth /2) + 0.001}`);
     entityEl.setAttribute("value", "Time: 0:00\nLevel: 0\nScore: 0");
     entityEl.setAttribute("color", "white");
@@ -837,12 +837,12 @@ AFRAME.registerComponent('tetris-machine', {
     entityEl.setAttribute("text", `wrapCount:${Math.floor(this.glassWidth * 25)}`);
     entityEl.setAttribute("position",
                           `${this.xoffset - (this.glassWidth *(2/5))}
-                           ${this.data.baseh + (this.data.gameh * TETRIS_BLOCK_SIZE)/2}
+                           ${this.data.baseh + (this.data.gameh * BLOCKS_BLOCK_SIZE)/2}
                            ${this.zoffset + (this.glassDepth /2) + 0.001}`);
      if (!this.data.tutorial) {
       entityEl.setAttribute("dualtext",
-                            `desktoptext:${this.data.description}\n\n\n${TETRIS_CONTROLS_DESKTOP[this.gametype]};
-                             vrtext:${this.data.description}\n\n\n${TETRIS_CONTROLS_VR[this.gametype]}`);
+                            `desktoptext:${this.data.description}\n\n\n${BLOCKS_CONTROLS_DESKTOP[this.gametype]};
+                             vrtext:${this.data.description}\n\n\n${BLOCKS_CONTROLS_VR[this.gametype]}`);
     }
     else
     {
@@ -1330,7 +1330,7 @@ AFRAME.registerComponent('hi-score-logger', {
   }
 });
 
-AFRAME.registerComponent('tetris-tutorial', {
+AFRAME.registerComponent('blocks-tutorial', {
   schema: {
     id:       {type: 'string'},
     tutorialtext: {type: 'selector', default: "#tutorialtext"}
@@ -1338,10 +1338,10 @@ AFRAME.registerComponent('tetris-tutorial', {
 
   init: function() {
     var entityEl = document.createElement('a-entity');
-    entityEl.setAttribute("tetris-machine",
+    entityEl.setAttribute("blocks-machine",
                           `id: ${this.data.id};
                           label:Tutorial;
-                          shapeset:3DTetris;
+                          shapeset:3D4Blocks;
                           xsize:6;
                           zsize:6;
                           gameh:6;
@@ -1400,7 +1400,7 @@ AFRAME.registerComponent('tetris-tutorial', {
     // Set up Shape Generator with limited controls (no move/rotate).
     // Empty string results in default values being set, whereas an invalid
     // string like "none" gets us what we want.
-    var shapeGenString = `keys:${TETRIS_KEYS_LIBRARY['DropOnly']};`
+    var shapeGenString = `keys:${BLOCKS_KEYS_LIBRARY['DropOnly']};`
     shapeGenString += "movecontrol:none;"
     shapeGenString += "rotatecontrol:none;"
     this.generator.setAttribute("shapegenerator", shapeGenString);
@@ -1447,7 +1447,7 @@ AFRAME.registerComponent('tetris-tutorial', {
     this._arena.clearArena();
 
     // Set up Shape Generator back to normal settings.
-    var shapeGenString = `keys:${TETRIS_KEYS_LIBRARY['3D']};`
+    var shapeGenString = `keys:${BLOCKS_KEYS_LIBRARY['3D']};`
     shapeGenString += "movecontrol: #lhand.thumbstick;"
     shapeGenString += "rotatecontrol: #rhand.thumbstick,#rhand.grip;"
     this.generator.setAttribute("shapegenerator", shapeGenString);
@@ -1565,7 +1565,7 @@ AFRAME.registerComponent('tetris-tutorial', {
 
     this.data.tutorialtext.setAttribute("dualtext",
     `desktoptext:
-     As you can see, moving into 3D means we have some new shapes that don't appear in 2D Tetris.
+     As you can see, moving into 3D means we have some new shapes that don't appear in 2D games.
 
      Try rotating this one to discover all the orientations that it can be put into.
 
@@ -1585,8 +1585,8 @@ AFRAME.registerComponent('tetris-tutorial', {
     this._arena.clearArena();
 
     // Set up Shape Generator & Arena to 2D settings.
-    var shapeGenString = `keys:${TETRIS_KEYS_LIBRARY['2D']};`
-    shapeGenString += `shapes:${TETRIS_BLOCK_LIBRARY['2DTetris']};`
+    var shapeGenString = `keys:${BLOCKS_KEYS_LIBRARY['2D']};`
+    shapeGenString += `shapes:${BLOCKS_BLOCK_LIBRARY['2D4Blocks']};`
     shapeGenString += `rotateaxes:Z;`
     this.generator.setAttribute("shapegenerator", shapeGenString);
 
@@ -1616,8 +1616,8 @@ AFRAME.registerComponent('tetris-tutorial', {
   step9: function () {
 
     // Set up Shape Generator & Arena to 2D settings.
-    var shapeGenString = `keys:${TETRIS_KEYS_LIBRARY['3D']};`
-    shapeGenString += `shapes:${TETRIS_BLOCK_LIBRARY['3DTetris']};`
+    var shapeGenString = `keys:${BLOCKS_KEYS_LIBRARY['3D']};`
+    shapeGenString += `shapes:${BLOCKS_BLOCK_LIBRARY['3D4Blocks']};`
     shapeGenString += `rotateaxes:XYZ;`
     this.generator.setAttribute("shapegenerator", shapeGenString);
 
@@ -1702,7 +1702,7 @@ AFRAME.registerComponent('rotate-to-face-player', {
   })()
 });
 
-AFRAME.registerComponent('tetrisland-floor', {
+AFRAME.registerComponent('blocks-arcade-floor', {
 
   init: function () {
     const TILES = 8

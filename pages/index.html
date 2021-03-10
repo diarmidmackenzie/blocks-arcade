@@ -9,8 +9,9 @@
     <script src="https://cdn.jsdelivr.net/gh/diarmidmackenzie/6dof-object-control@v0.5-alpha/src/keyboard-hand-controls.min.js"></script>
     <script src="https://cdn.jsdelivr.net/gh/diarmidmackenzie/6dof-object-control@v0.5-alpha/src/thumbstick-object-control.min.js"></script>
     <script src="https://cdn.jsdelivr.net/gh/diarmidmackenzie/instanced-mesh@v0.2-alpha/src/instanced-mesh.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/diarmidmackenzie/tetris-engine@v0.3-alpha/src/tetris.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/diarmidmackenzie/tetrisland@v0.1.1-alpha/src/tetrisland-utils.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/diarmidmackenzie/blocks-engine@v0.4-alpha/src/blocks.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/diarmidmackenzie/blocks-arcade@v0.2-alpha/src/blocksarcade-utils.min.js"></script>
+
 </head>
   <body>
     <a-scene renderer="colorManagement:true">
@@ -50,8 +51,8 @@
                                    -1.7 0 -1.7 -6 45 0,
                                    0 0 -1.65 -6 0 0,
                                    1.6 0 -1.6 -6 -45 0,
-                                   1.8 0 0 -6 -90 0,
                                    1.75 0 1.75 -6 -135 0,
+                                   1.8 0 0 -6 -90 0,
                                    0 0 2.5 15 180 0">
 
     <a-entity id="camera"
@@ -89,28 +90,28 @@
 <a-plane material= "color:black;transparent:true;opacity:0.9" position = "0 1.6 4" rotation="0 0 0" height = "3" width = "2.5"
          key-bindings="bindings:Space=next,#rhand.abuttondown=next,#rhand.gripdown=next">
   <a-text id="welcome-panel" width="2.2" text=wrapCount:55 position = "-1.1 0 0" align="left"
-          dualtext='desktoptext:Welcome to the Tetris Arcade!\n
+          dualtext='desktoptext:Welcome to the Blocks Arcade!\n
     If you have a VR-capable device, enter VR by clicking the icon in the bottom right of the screen.\n
     If you are using a desktop computer...
     ... press 1 to jump to the tutorial to get started.\n
     ... keys 2-9 will also jump you to useful positions, and 0 will bring you back here.\n
     You can also use WASD or cursors to move, and the mouse to look around.\n
     This experience was designed primarily to be played in VR, but all games can also be played on desktop using the keyboard.\n\n
-    Tetris Arcade developed by Diarmid Mackenzie using A-Frame.\n
+    Blocks Arcade developed by Diarmid Mackenzie using A-Frame.\n
     Background scene is "Psychedelica City Area One" by Bernd Kromueller.\n
     All code is open source and available on GitHub.\n
-    https://github.com/diarmidmackenzie/tetrisland\n
-    Comments and feedback welcome on Twitter @tetrisarcade, or Reddit r/TetrisArcade.\n
+    https://github.com/diarmidmackenzie/blocks-arcade\n
+    Comments and feedback welcome on Twitter @blocksarcadeVR, or Reddit r/BlocksArcade.\n
     This game is free for everyone.  Please share it with your friends!;
-    vrtext:Welcome to the Tetris Arcade!\n
+    vrtext:Welcome to the Blocks Arcade!\n
     You are now in VR mode.  Enter the Arcade by walking forwards, or teleporting using the Left Trigger.\n
     You will find a basic tutorial directly ahead of you.\n
     This game has been primarily tested on the Oculus Quest 2, but I expect it to work on other VR platforms too.\n\n
-    Tetris Arcade developed by Diarmid Mackenzie using A-Frame and Three.js.\n
+    Blocks Arcade developed by Diarmid Mackenzie using A-Frame and Three.js.\n
     Background scene is "Psychedelica City Area One" by Bernd Kromueller.\n
     All code is open source and available on GitHub.\n
-    https://github.com/diarmidmackenzie/tetrisland\n
-    Comments and feedback welcome on Twitter @tetrisarcade, or Reddit r/tetrisarcade.\n
+    https://github.com/diarmidmackenzie/blocks-arcade\n
+    Comments and feedback welcome on Twitter @blocksarcadeVR, or Reddit r/BlocksArcade.\n
     This game is free for everyone.  Please share it with your friends!'>
   </a-text>
 </a-plane>
@@ -118,7 +119,7 @@
 <!-- Floor-->
 <a-entity id="floor-mesh1"
        bevelled-tile="facecolor: #020202; framecolor: black; width: 1.5; depth:1.5; frame: 0.015"
-       instanced-mesh="capacity:150" tetrisland-floor
+       instanced-mesh="capacity:150" blocks-arcade-floor
        position = "0 0 0"></a-entity>
 
 <!--<a-plane material= "color:black;transparent:true;opacity:0.9" position = "0 0 0" rotation="-90 0 0" scale = "12 12 12"></a-plane>-->
@@ -223,7 +224,7 @@
          color="black"
          position = "0 2 5.5" rotation = "0 180 0" width = "2" height = "3"
          hi-scores-table="games:2DTetris6,2DTetris10,3DTetris4,3DTetris5,3DPentris6X,2DPentris12S,2DPentris10R;
-                          names:Skinny Tetris,Classic Tetris,Mini 3D Tetris,3D Tetris,3D Pentris,2D Pentris,2D Pentris Easy;
+                          names:Skinny 2D Blocks,Classic 2D Blocks,Mini 3D Blocks,3D Blocks,3D 5-Blocks,2D 5-Blocks,2D 5-Blocks Easy;
                           keyboardcontrols: Z/X keys for prev/next;
                           vrcontrols: X/Y buttons for prev/next"
          key-bindings="bindings:KeyZ=prev,KeyX=next,#lhand.xbuttondown=prev,#lhand.ybuttondown=next"
@@ -266,7 +267,7 @@
 <a-entity position = "6 3.5 -5" mixin="shape5"></a-entity>
 
 <a-sky segments-height="10" segments-width="32"
-   src="https://cdn.jsdelivr.net/gh/diarmidmackenzie/tetrisland@latest/assets/psych/psych2.jpg"></a-sky>
+   src="https://cdn.jsdelivr.net/gh/diarmidmackenzie/blocks-arcade@latest/assets/psych/psych2.jpg"></a-sky>
 
 <!--<a-mixin id="cube" geometry="primitive: box;"
          scale="0.1 0.1 0.1"
@@ -327,55 +328,55 @@
          event-set__gameover="_event: game-over; visible: true">
 </a-mixin>
 
-<a-entity tetris-machine="id:1;shapeset:2DTetris;
-                          label:Skinny Tetris;
+<a-entity blocks-machine="id:1;shapeset:2D4Blocks;
+                          label:Skinny 2D Blocks;
                           xsize:6;zsize:1;
                           gameh:20;
                           hiscoreid:2DTetris6;
                           description:
-                          A twist on the classic 2D Tetris.
+                          A twist on the classic 2D falling blocks game.
 
                           With just 6 horizontal spaces in the play area you can very
                           easily run out of options for placing the shapes!"
           position = "-3 0 3" rotation = "0 135 0">
 </a-entity>
 
-<a-entity tetris-machine="id:2;shapeset:2DTetris;
-                          label:2D Tetris;
+<a-entity blocks-machine="id:2;shapeset:2D4Blocks;
+                          label:2D Blocks;
                           xsize:10;zsize:1;
                           hiscoreid:2DTetris10;
                           description:
-                          This is the classic 2D Tetris.
+                          This is a classic 2D falling blocks game.
 
                           You've probably played this before but we hope you enjoy our version too!"
           position = "-3.5 0 0" rotation = "0 90 0">
 </a-entity>
 
 
-<a-entity tetris-machine="id:3;shapeset:3DTetris;
-                          label:Mini 3D Tetris;
+<a-entity blocks-machine="id:3;shapeset:3D4Blocks;
+                          label:Mini 3D Blocks;
                           xsize:4;zsize:4;
                           levelspeedup:5;
                           hiscoreid:3DTetris4;
                           description:
-                          3D Tetris in the smallest possible play area: just 4x4."
+                          3D Blocks in the smallest possible play area: just 4x4."
           position = "-3 0 -3" rotation = "0 45 0">
 </a-entity>
 
-<a-entity tetris-machine="id:4;shapeset:3DTetris;
-                          label:3D Tetris;
+<a-entity blocks-machine="id:4;shapeset:3D4Blocks;
+                          label:3D Blocks;
                           xsize:5;zsize:5;
                           levelspeedup:5;
                           hiscoreid:3DTetris5;
                           description:
-                          This is our 3D version of the classic Tetris game.
+                          This is our 3D version of a falling blocks game.
 
                           You'll need to fill an entire 5x5 layer for it to be cleared."
           position = "0 0 -3.5" rotation = "0 0 0">
 </a-entity>
 
-<a-entity tetris-machine="id:5;shapeset:3DPentris;
-                          label:3D Pentris;
+<a-entity blocks-machine="id:5;shapeset:3D5Blocks;
+                          label:3D 5-Blocks;
                           xsize:6;zsize:6;
                           hiscoreid:3DPentris6X;
                           levelspeedup:5;
@@ -388,33 +389,33 @@
 </a-entity>
 
 
-<a-entity tetris-machine="id:6;shapeset:2DPentris;
-                          label:2D Pentris;
+<a-entity blocks-machine="id:6;shapeset:2D5Blocks;
+                          label:2D 5-Blocks;
                           xsize:12;zsize:1;
                           levelspeedup:0;
                           hiscoreid:2DPentris12S;
                           description:
-                          Only 2 dimensions, but Pentris includes all possible shapes made out of 5 blocks!
+                          Only 2 dimensions, but includes all possible shapes made out of 5 blocks!
 
-                          Even experienced Tetris players will find this one hard...
+                          Even experienced players will find this one hard...
                           We have disabled speed-up to give you a better chance.
 
                           If it's too hard for you, try the machine to the right, where we have taken out a few of the most difficult blocks."
           position = "3.5 0 0" rotation = "0 -90 0">
 </a-entity>
 
-<a-entity tetris-machine="id:7;shapeset:2DPentrisEasy;
-                          label:2D Pentris Easy;
+<a-entity blocks-machine="id:7;shapeset:2DBlocksEasy;
+                          label:2D 5-Blocks Easy;
                           xsize:10;zsize:1;
                           hiscoreid:2DPentris10R;
                           description:
-                          Like Pentris (the machine to the left), but we took out some of the nastiest shapes to make it a little easier.
+                          Like 2D 5-Blocks (the machine to the left), but we took out some of the nastiest shapes to make it a little easier.
 
-                          This game provides a step up in challenge from classic Tetris, but is not too tricky to get to grips with."
+                          This game provides a step up in challenge from classic 4-Block game, but is not too tricky to get to grips with."
           position = "3 0 3" rotation = "0 -135 0">
 </a-entity>
 
-<a-entity id="tutorial" tetris-tutorial="id:8"
+<a-entity id="tutorial" blocks-tutorial="id:8"
           position = "0 0 0" rotation = "0 0 0">
 </a-entity>
 <a-entity position = "0 1.8 0" rotate-to-face-player>
