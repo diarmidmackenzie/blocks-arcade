@@ -9,3 +9,4 @@ src/instanced-mesh.js
 pages/perf-test.html
 src/blocks.js
 CNAME
+src/backend/instance/hiscores.sqlite
