@@ -129,3 +129,14 @@ The background scene:
 
 
 
+The background music:
+
+- fIlename: music/sb_anewyear.mp3: 
+- "A New Year" by [Scott Buckley](https://soundcloud.com/scottbuckley)
+- Original source: ["A New Year"](https://soundcloud.com/scottbuckley/a-new-year-cc-by)
+- License: [Attribution 4.0 International (CC BY 4.0)](https://creativecommons.org/licenses/by/4.0/)
+
+
+
+
+
