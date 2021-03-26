@@ -16,6 +16,11 @@
   <body>
     <a-scene renderer="colorManagement:true">
 
+      <a-assets>
+          <audio id="a-new-year" src="https://cdn.jsdelivr.net/gh/diarmidmackenzie/blocks-arcade@latest/assets/music/sb_anewyear.mp3" preload="auto"></audio>
+      </a-assets>
+      <a-sound id="music" src="#a-new-year" autoplay="true" loop="true"></a-sound>
+
       <!--Lighting-->
       <!--Directional light to create shadows. Note that position determines direction only,
           not actual position of light-->
@@ -99,6 +104,7 @@
     This experience was designed primarily to be played in VR, but all games can also be played on desktop using the keyboard.\n\n
     Blocks Arcade developed by Diarmid Mackenzie using A-Frame.\n
     Background scene is "Psychedelica City Area One" by Bernd Kromueller.\n
+    Music is "A New Year" by Scott Buckley.\n
     All code is open source and available on GitHub.\n
     https://github.com/diarmidmackenzie/blocks-arcade\n
     Comments and feedback welcome on Twitter @blocksarcadeVR, or Reddit r/BlocksArcade.\n
@@ -109,6 +115,7 @@
     This game has been primarily tested on the Oculus Quest 2, but I expect it to work on other VR platforms too.\n\n
     Blocks Arcade developed by Diarmid Mackenzie using A-Frame and Three.js.\n
     Background scene is "Psychedelica City Area One" by Bernd Kromueller.\n
+    Music is "A New Year" by Scott Buckley.\n
     All code is open source and available on GitHub.\n
     https://github.com/diarmidmackenzie/blocks-arcade\n
     Comments and feedback welcome on Twitter @blocksarcadeVR, or Reddit r/BlocksArcade.\n
