@@ -1,0 +1,213 @@
+<!--Basic test of motion controls with multiple games.-->
+
+<html>
+  <head>
+    <title>Motion controls with multiple games</title>
+    <script src="https://aframe.io/releases/1.1.0/aframe.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/donmccurdy/aframe-extras@v6.1.1/dist/aframe-extras.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/diarmidmackenzie/key-bindings@v0.3-alpha/key-bindings.min.js"></script>
+    <script src="https://unpkg.com/aframe-event-set-component@4.2.1/dist/aframe-event-set-component.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/fernandojsg/aframe-teleport-controls@master/dist/aframe-teleport-controls.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/diarmidmackenzie/6dof-object-control@v0.5-alpha/src/6dof-object-control.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/diarmidmackenzie/6dof-object-control@v0.5-alpha/src/keyboard-hand-controls.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/diarmidmackenzie/6dof-object-control@v0.5-alpha/src/thumbstick-object-control.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/diarmidmackenzie/instanced-mesh@v0.2-alpha/src/instanced-mesh.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/diarmidmackenzie/blocks-engine@v0.4.1-alpha/src/blocks.min.js"></script>
+    <script src="../src/blocksarcade-utils.js"></script>
+  </head>
+  <body>
+    <a-scene>
+      <a-entity id="rig" movement-controls="controls:keyboard"
+                 thumbstick-object-control="movestick:#lhand;
+                          rotatestick:none;
+                          moverepeattime:1;
+                          axes:XZ;
+                          posunit:0.1;
+                          disabled:true"
+                 thumbsticksteering="stick:#rhand;
+                                     disabled:true">
+        <a-text id="log-panel2" value="R Hand Keyboard Data" position="2 3 -7" color="grey"></a-text>
+        <a-text id="log-panel3" value="L Hand Keyboard Sim Data" position="-3 3 -7" color="grey"></a-text>
+        <a-text value="Press Left Shift or Right Shift to choose a controller.\n
+                       Press C or V to select Thumbstick x or y,\n
+                       then -/= to move in that direction.\n
+                       Also, use 4/5/6 to re-orient controller\n
+                       to test effect of thumbstick moves\n
+                       at different orientations."
+                       position="-7 1 -5" color="grey"></a-text>
+
+        <a-plane id="movement-mode"
+                 material= "color:black;transparent:true;opacity:0.8"
+                 position="0 1.5 -1"
+                 height = "0.75"
+                 width = "1"
+                 visible="false"
+                 detect-double-grip="gripevent: textshow; releaseevent: texthide"
+                 event-set__show="_event:textshow;_target:#movement-mode; visible:true"
+                 event-set__hide="_event:texthide;_target:#movement-mode; visible:false"
+                 event-set__enablemove="_event:textshow;_target:#rig; thumbstickobjectcontrol.disabled:false"
+                 event-set__disablemove="_event:texthide;_target:#rig; thumbstickobjectcontrol.disabled:true"
+                 event-set__enabletp="_event:textshow;_target:#lhand; teleportcontrols.active:true"
+                 event-set__disabletp="_event:texthide;_target:#lhand; teleportcontrols.active:false"
+                 event-set__enablets="_event:textshow;_target:#rig; thumbsticksteering.disabled:false"
+                 event-set__disablets="_event:texthide;_target:#rig; thumbsticksteering.disabled:true">
+          <a-text width=1.5
+                  align="center"
+                  value = '"Locomotion Mode" active\n
+                           Left Thumbstick to move\n
+                           Left Trigger to teleport\n
+                           Right Thumbstick to turn\n
+                           Release Grips to return to game'>
+          </a-text>
+        </a-plane>
+
+        <a-entity id="camera"
+                  camera position="0 1.6 0"
+                  look-controls
+                  attention="axes:XZ;start:focus;end:defocus;
+                             targets:#stand1,#stand2,#stand3,#stand4,#stand5,#stand6,#stand7"
+                  detect-double-grip="gripevent: disableAttention; releaseevent: enableAttention">
+        </a-entity>
+
+        <a-entity id="lhand"
+            keyboard-hand-controls="logger:#log-panel3"
+            key-bindings="debug:true;bindings:ShiftLeft=enable,ShiftRight=disable"
+            visible="true"
+            event-set__pause="_target:#lhandstick;_event:disable; material.color: grey"
+            event-set__play="_target:#lhandstick;_event:enable; material.color: red"
+            position="-0.2 1.3 -0.4">
+            <a-box id="lhandstick" scale="0.05 0.3 0.05" material="color:red">
+            </a-box>
+        </a-entity>
+        <a-entity id="rhand"
+            keyboard-hand-controls="logger:#log-panel2"
+            key-bindings="bindings:ShiftRight=enable,ShiftLeft=disable"
+            visible="true"
+            event-set__pause="_target:#rhandstick;_event:disable; material.color: grey"
+            event-set__play="_target:#rhandstick;_event:enable; material.color: red"
+            position="0.2 1.3 -0.4">
+            <a-box id="rhandstick" scale="0.05 0.3 0.05" material="color:red">
+            </a-box>
+        </a-entity>
+      </a-entity>
+
+      <a-mixin id="stand" framed-block="facecolor: black; framecolor: white" scale = "0.3 0.25 0.3"></a-mixin>
+
+      <a-mixin id="block0" framed-block="facecolor: yellow; framecolor: black" scale = "0.05 0.05 0.05"></a-mixin>
+      <a-mixin id="block1" framed-block="facecolor: blue; framecolor: black" scale = "0.05 0.05 0.05"></a-mixin>
+      <a-mixin id="block2" framed-block="facecolor: white; framecolor: black" scale = "0.05 0.05 0.05"></a-mixin>
+      <a-mixin id="block3" framed-block="facecolor: magenta; framecolor: black" scale = "0.05 0.05 0.05"></a-mixin>
+      <a-mixin id="block4" framed-block="facecolor: cyan; framecolor: black" scale = "0.05 0.05 0.05"></a-mixin>
+      <a-mixin id="block5" framed-block="facecolor: green; framecolor: black" scale = "0.05 0.05 0.05"></a-mixin>
+      <a-mixin id="block6" framed-block="facecolor: red; framecolor: black" scale = "0.05 0.05 0.05"></a-mixin>
+      <a-mixin id="block7" framed-block="facecolor: #888888; framecolor: black" scale = "0.05 0.05 0.05"></a-mixin>
+      <a-mixin id="block8" framed-block="facecolor: #FF8800; framecolor: black" scale = "0.05 0.05 0.05"></a-mixin>
+      <a-mixin id="block9" framed-block="facecolor: #FF0088; framecolor: black" scale = "0.05 0.05 0.05"></a-mixin>
+      <a-mixin id="block10" framed-block="facecolor: #88FF00; framecolor: black" scale = "0.05 0.05 0.05"></a-mixin>
+      <a-mixin id="block11" framed-block="facecolor: #00FF88; framecolor: black" scale = "0.05 0.05 0.05"></a-mixin>
+      <a-mixin id="block12" framed-block="facecolor: #8800FF; framecolor: black" scale = "0.05 0.05 0.05"></a-mixin>
+      <a-mixin id="block13" framed-block="facecolor: #0088FF; framecolor: black" scale = "0.05 0.05 0.05"></a-mixin>
+      <a-mixin id="block14" framed-block="facecolor: #FF8888; framecolor: black" scale = "0.05 0.05 0.05"></a-mixin>
+      <a-mixin id="block15" framed-block="facecolor: #88FF88; framecolor: black" scale = "0.05 0.05 0.05"></a-mixin>
+      <a-mixin id="block16" framed-block="facecolor: #8888FF; framecolor: black" scale = "0.05 0.05 0.05"></a-mixin>
+      <a-mixin id="block17" framed-block="facecolor: #88FFFF; framecolor: black" scale = "0.05 0.05 0.05"></a-mixin>
+      <a-mixin id="block18" framed-block="facecolor: #FFFF88; framecolor: black" scale = "0.05 0.05 0.05"></a-mixin>
+      <a-mixin id="block19" framed-block="facecolor: #FF88FF; framecolor: black" scale = "0.05 0.05 0.05"></a-mixin>
+
+      <!-- Floor-->
+      <a-entity id="floor-mesh1"
+             bevelled-tile="facecolor: #020202; framecolor: black; width: 1.5; depth:1.5; frame: 0.015"
+             instanced-mesh="capacity:150" blocks-arcade-floor
+             position = "0 0 0"></a-entity>
+
+     <!-- the 7 games-->
+     <a-entity blocks-machine="id:1;shapeset:2D4Blocks;
+                               label:Skinny 2D Blocks;
+                               xsize:6;zsize:1;
+                               gameh:20;
+                               hiscoreid:2DTetris6;
+                               description:
+                               A twist on the classic 2D falling blocks game.
+
+                               With just 6 horizontal spaces in the play area you can very
+                               easily run out of options for placing the shapes!"
+               position = "-3 0 3" rotation = "0 135 0">
+     </a-entity>
+
+     <a-entity blocks-machine="id:2;shapeset:2D4Blocks;
+                               label:2D Blocks;
+                               xsize:10;zsize:1;
+                               hiscoreid:2DTetris10;
+                               description:
+                               This is a classic 2D falling blocks game.
+
+                               You've probably played this before but we hope you enjoy our version too!"
+               position = "-3.5 0 0" rotation = "0 90 0">
+     </a-entity>
+
+
+     <a-entity blocks-machine="id:3;shapeset:3D4Blocks;
+                               label:Mini 3D Blocks;
+                               xsize:4;zsize:4;
+                               levelspeedup:5;
+                               hiscoreid:3DTetris4;
+                               description:
+                               3D Blocks in the smallest possible play area: just 4x4."
+               position = "-3 0 -3" rotation = "0 45 0">
+     </a-entity>
+
+     <a-entity blocks-machine="id:4;shapeset:3D4Blocks;
+                               label:3D Blocks;
+                               xsize:5;zsize:5;
+                               levelspeedup:5;
+                               hiscoreid:3DTetris5;
+                               description:
+                               This is our 3D version of a falling blocks game.
+
+                               You'll need to fill an entire 5x5 layer for it to be cleared."
+               position = "0 0 -3.5" rotation = "0 0 0">
+     </a-entity>
+
+     <a-entity blocks-machine="id:5;shapeset:3D5Blocks;
+                               label:3D 5-Blocks;
+                               xsize:6;zsize:6;
+                               hiscoreid:3DPentris6X;
+                               levelspeedup:5;
+                               clear:anyline;
+                               description:
+                               A larger arena, but a much more complicated set of shapes to play with!
+
+                               On this one, we'll remove any complete horizontal row of blocks."
+               position = "3 0 -3" rotation = "0 -45 0">
+     </a-entity>
+
+
+     <a-entity blocks-machine="id:6;shapeset:2D5Blocks;
+                               label:2D 5-Blocks;
+                               xsize:12;zsize:1;
+                               levelspeedup:0;
+                               hiscoreid:2DPentris12S;
+                               description:
+                               Only 2 dimensions, but includes all possible shapes made out of 5 blocks!
+
+                               Even experienced players will find this one hard...
+                               We have disabled speed-up to give you a better chance.
+
+                               If it's too hard for you, try the machine to the right, where we have taken out a few of the most difficult blocks."
+               position = "3.5 0 0" rotation = "0 -90 0">
+     </a-entity>
+
+     <a-entity blocks-machine="id:7;shapeset:2D5BlocksEasy;
+                               label:2D 5-Blocks Easy;
+                               xsize:10;zsize:1;
+                               hiscoreid:2DPentris10R;
+                               description:
+                               Like 2D 5-Blocks (the machine to the left), but we took out some of the nastiest shapes to make it a little easier.
+
+                               This game provides a step up in challenge from classic 4-Block game, but is not too tricky to get to grips with."
+               position = "3 0 3" rotation = "0 -135 0">
+     </a-entity>
+
+    </a-scene>
+  </body>
+</html>
