@@ -181,6 +181,8 @@ AFRAME.registerComponent('attention', {
     maxdistance: {type: 'number', default: 10},
     focusevent: {type: 'string', default: "focus"},
     defocusevent: {type: 'string', default: "defocus"},
+    disableevent:  {type: 'string', default: "disableAttention"},
+    enableevent:  {type: 'string', default: "enableAttention"},
     axes: {type: 'string', default: "XYZ"}
   },
 
@@ -198,6 +200,11 @@ AFRAME.registerComponent('attention', {
     this.cameraQuaternion = new THREE.Quaternion();
     this.targets = [];
     this.attentionTarget = null;
+    this.disabled = false;
+    this.listeners = {
+      'disable' : this.disable.bind(this),
+      'enable' : this.enable.bind(this)
+    }
   },
 
   update: function () {
@@ -206,9 +213,28 @@ AFRAME.registerComponent('attention', {
     // to creation of target objects.
     this.gotTargets = false;
 
+    this.el.addEventListener(this.data.disableevent, this.listeners.disable);
+    this.el.addEventListener(this.data.enableevent, this.listeners.enable);
+  },
+
+  disable: function () {
+
+    this.disabled = true;
+
+    // fire defocus event for whatever has current focus.
+    if (this.attentionTarget !== null) {
+      this.attentionTarget.emit(this.data.defocusevent);
+      this.attentionTarget = null;
+    }
+  },
+
+  enable: function () {
+    this.disabled = false;
   },
 
   tick: function (time, timeDelta) {
+
+    if (this.disabled) return;
 
     if (!this.gotTargets) {
       this.data.targets.forEach(item => {
@@ -1721,4 +1747,180 @@ AFRAME.registerComponent('blocks-arcade-floor', {
       }
     }
   }
+});
+
+/* Detects pressing of both left grip and right grip at the same time.*/
+AFRAME.registerComponent('detect-double-grip', {
+
+  multiple: true,
+
+  schema : {
+    lhand: {type: 'selector', default: "#lhand"},
+    rhand: {type: 'selector', default: "#rhand"},
+    gripevent: {type: 'string', default: "grip"},
+    releaseevent: {type: 'string', default: "release"}
+  },
+
+  init: function () {
+    this.gripsDown = 0;
+  },
+
+  update: function () {
+    this.data.lhand.addEventListener('gripdown',  () => this.gripDown());
+    this.data.lhand.addEventListener('gripup',  () => this.gripUp());
+    this.data.rhand.addEventListener('gripdown',  () => this.gripDown());
+    this.data.rhand.addEventListener('gripup',  () => this.gripUp());
+  },
+
+  gripDown: function () {
+    this.gripsDown++;
+
+    if (this.gripsDown == 2) {
+      this.el.emit(this.data.gripevent)
+    }
+  },
+
+  gripUp: function () {
+
+    if (this.gripsDown == 2) {
+      this.el.emit(this.data.releaseevent)
+    }
+    this.gripsDown--;
+
+    // Error correction (e.g. if grips were down on initialization)
+    if (this.gripsDown < 0) {
+      this.gripsDown = 0;
+    }
+  }
+});
+
+/* Workarounds for the fact that event-set cannot
+ * set properties on components that include dashes
+ * in their names.
+ * These components proxy the specific properties
+ * that we need to set to the real components.  */
+AFRAME.registerComponent('thumbstickobjectcontrol', {
+
+  schema : {
+    disabled: {type: 'boolean', default: false}
+  },
+
+  update: function () {
+    this.el.setAttribute("thumbstick-object-control",
+                         {disabled: this.data.disabled});
+  }
+
+});
+
+AFRAME.registerComponent('teleportcontrols', {
+
+  schema : {
+    active: {type: 'boolean', default: true}
+  },
+
+  update: function () {
+
+    if (this.data.active) {
+      this.el.setAttribute("teleport-controls",
+         {'cameraRig': "#rig",
+          'teleportOrigin': "#camera",
+          'button': "trigger"});
+    }
+    else {
+      this.el.removeAttribute("teleport-controls");
+    }
+  }
+
+});
+
+AFRAME.registerComponent('thumbsticksteering', {
+
+  schema : {
+    stick: {type: 'selector', default: "#rhand"},
+    increment:  {type: 'number', default: 2},
+    disabled:   {type: 'boolean', default: false},
+    threshold: {type: 'number', default: 0.5}
+  },
+
+  init: function () {
+    this.listeners = {
+      thumbstickMoved: this.thumbstickMoved.bind(this)
+    }
+  },
+
+  update: function () {
+
+    if (this.data.stick) {
+      this.data.stick.addEventListener('thumbstickmoved',
+                                       this.listeners.thumbstickMoved,
+                                       false);
+    }
+  },
+
+  thumbstickMoved: function(event) {
+
+    if (this.data.disabled) return;
+
+    if (Math.abs(event.detail.x) > this.data.threshold) {
+      // Thumbstick moved.
+      const direction = -Math.sign(event.detail.x)
+
+
+      this.el.object3D.rotation.y += (Math.PI/180) *
+                                     direction *
+                                     this.data.increment;
+    }
+  }
+
+});
+
+AFRAME.registerComponent('jumptocamera', {
+
+  schema: {
+    camera:  {type: 'selector', default: "#camera"},
+    event:   {type: 'string', default: "textshow"},
+    distance: {type: 'number', default: 1}
+  },
+
+  init: function () {
+
+    this.listeners = {
+      jumpToCamera: this.jumpToCamera.bind(this)
+    }
+
+    this.camP = new THREE.Vector3();
+    this.camQ = new THREE.Quaternion();
+    this.camD = new THREE.Vector3();
+    this.transformQuaternion = new THREE.Quaternion();
+
+  },
+
+  update: function () {
+
+    this.el.addEventListener(this.data.event,
+                             this.listeners.jumpToCamera,
+                             false);
+  },
+
+  jumpToCamera: function () {
+
+    // Get camera position
+    const camera = this.data.camera.object3D
+    camera.updateMatrixWorld();
+    this.camP.setFromMatrixPosition(camera.matrixWorld);
+
+    // Get camera direction vector
+    this.camD.set(0, 0, -1);
+    this.camQ.setFromRotationMatrix(camera.matrixWorld);
+    this.camD.applyQuaternion(this.camQ);
+
+    // Set object position
+    this.el.object3D.position.copy(this.camP);
+    this.el.object3D.position.addScaledVector(this.camD, this.data.distance);
+    this.el.object3D.parent.worldToLocal(this.el.object3D.position);
+
+    // Face to camera
+    this.el.object3D.lookAt(this.camP);
+  }
+
 });

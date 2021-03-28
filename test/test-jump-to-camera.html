@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Test Object Freeze</title>
+    <script src="https://aframe.io/releases/1.1.0/aframe.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/donmccurdy/aframe-extras@v6.1.1/dist/aframe-extras.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/diarmidmackenzie/key-bindings@v0.3-alpha/key-bindings.min.js"></script>
+    <script src="../src/blocksarcade-utils.js"></script>
+  </head>
+  <body>
+    <a-scene background="color: #ECECEC">
+        <a-entity id="rig" movement-controls>
+          <a-text value="Press space to move the plan.
+                         It should always move to just in front of the camera"
+                         position="-7 1 -5" color="grey"></a-text>
+
+          <a-entity id="camera"
+                    camera
+                    look-controls
+                    position="0 1.6 0">
+          </a-entity>
+        </a-entity>
+      <a-plane position ="0 1.6 -1.5"
+               key-bindings="bindings:Space=jump"
+               jumptocamera="event:jump">
+      </a-plane>
+      <a-sphere position="0 1.25 -5" radius="1.25" color="#EF2D5E" shadow></a-sphere>
+      <a-cylinder position="1 0.75 -3" radius="0.5" height="1.5" color="#FFC65D" shadow></a-cylinder>
+      <a-plane position="0 0 -4" rotation="-90 0 0" width="4" height="4" color="#7BC8A4" shadow></a-plane>
+    </a-scene>
+  </body>
+</html>
