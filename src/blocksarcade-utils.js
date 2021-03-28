@@ -746,7 +746,7 @@ AFRAME.registerComponent('blocks-machine', {
     var shapeGenString = `arena:#arena${this.data.id};`
     shapeGenString += `shapes:${BLOCKS_BLOCK_LIBRARY[this.data.shapeset]};`
     shapeGenString += `keys:${BLOCKS_KEYS_LIBRARY[this.gametype]};`
-    shapeGenString += "movecontrol: #lhand.thumbstick;"
+    shapeGenString += "movecontrol: #lhand.thumbstick,#rhand.grip;"
     shapeGenString += "rotatecontrol: #rhand.thumbstick,#rhand.grip;"
     if (this.gametype == "2D") {
       shapeGenString += "rotateaxes:Z;"
