@@ -1126,20 +1126,26 @@ AFRAME.registerComponent('hi-scores-table', {
 
   update: function() {
 
-    if (this.lastTickTime - this.dataTimestamps[this.displayIndex] > 3600000)
-    {
-      // Data is over 60 mins old.  Refresh it.
-      const gameId = this.data.games[this.displayIndex];
-      const queryURL = `${this.data.url}/list?game=${gameId}&count=5`
-      var xmlHttp = new XMLHttpRequest();
-      xmlHttp.onreadystatechange = this.httpResponseFunction;
-      xmlHttp.open("GET", queryURL, true); // true for asynchronous
-      xmlHttp.send(null);
-      this.queryIndex = this.displayIndex;
+    if (this.displayIndex == this.data.games.length) {
+      // Special case.  Display credits.
+      this.showCredits();
     }
-    else
-    {
-      this.presentData(this.jsonData[this.displayIndex]);
+    else {
+      if (this.lastTickTime - this.dataTimestamps[this.displayIndex] > 3600000)
+      {
+        // Data is over 60 mins old.  Refresh it.
+        const gameId = this.data.games[this.displayIndex];
+        const queryURL = `${this.data.url}/list?game=${gameId}&count=5`
+        var xmlHttp = new XMLHttpRequest();
+        xmlHttp.onreadystatechange = this.httpResponseFunction;
+        xmlHttp.open("GET", queryURL, true); // true for asynchronous
+        xmlHttp.send(null);
+        this.queryIndex = this.displayIndex;
+      }
+      else
+      {
+        this.presentData(this.jsonData[this.displayIndex]);
+      }
     }
   },
 
@@ -1201,6 +1207,27 @@ AFRAME.registerComponent('hi-scores-table', {
     }
   },
 
+  showCredits: function() {
+    var text = `Blocks Arcade developed by
+                Diarmid Mackenzie using A-Frame.\n
+                Background scene:
+                "Psychedelica City Area One"
+                by Bernd Kromueller.\n
+                Music: "A New Year"
+                by Scott Buckley.\n
+                All code is open source on
+                GitHub.  https://github.com/
+                diarmidmackenzie/blocks-arcade\n
+                Comments and feedback welcome:
+                 * Twitter @blocksarcadeVR
+                 * Reddit r/BlocksArcade.\n
+                This game is free for everyone.
+                Please share it!\n`
+    text += this.pageFooter();
+
+    this.el.setAttribute('text', "value: " + text);
+  },
+
   presentData: function(jsonData) {
 
     var text = (this.data.names[this.displayIndex] == "") ?
@@ -1214,7 +1241,13 @@ AFRAME.registerComponent('hi-scores-table', {
     text += this.showHiScoreTable(jsonData['month']['hiscores']);
     text += "\n==== All Time High Scores ====\n"
     text += this.showHiScoreTable(jsonData['alltime']['hiscores']);
-    text += `\n(${this.displayIndex + 1}/${this.data.games.length}) `;
+    text += this.pageFooter();
+
+    this.el.setAttribute('text', "value: " + text);
+  },
+
+  pageFooter: function() {
+    var text = `\n(${this.displayIndex + 1}/${this.data.games.length + 1}) `;
     if (this.inFocus) {
       if (this.sceneEl.is('vr-mode')) {
         text += this.data.vrcontrols;
@@ -1225,7 +1258,7 @@ AFRAME.registerComponent('hi-scores-table', {
       }
     }
 
-    this.el.setAttribute('text', "value: " + text);
+    return text;
   },
 
   showHiScoreTable: function(hiScoreData) {
@@ -1269,7 +1302,7 @@ AFRAME.registerComponent('hi-scores-table', {
     if (this.inFocus) {
       this.manualMove = true;
       this.displayIndex++;
-      if (this.displayIndex >= this.data.games.length) {
+      if (this.displayIndex > this.data.games.length) {
         this.displayIndex = 0;
       }
 
@@ -1282,7 +1315,7 @@ AFRAME.registerComponent('hi-scores-table', {
       this.manualMove = true;
       this.displayIndex--;
       if (this.displayIndex < 0) {
-        this.displayIndex = this.data.games.length - 1;
+        this.displayIndex = this.data.games.length;
       }
       this.update();
     }
@@ -1390,7 +1423,8 @@ AFRAME.registerComponent('blocks-tutorial', {
       this.step7.bind(this),
       this.step8.bind(this),
       this.step9.bind(this),
-      this.step10.bind(this)
+      this.step10.bind(this),
+      this.step11.bind(this)
     ]
 
     this.el.addEventListener('nextStep', this.listeners.nextStep, false);
@@ -1420,32 +1454,116 @@ AFRAME.registerComponent('blocks-tutorial', {
   },
 
   step1: function () {
-
     this._arena.clearArena();
 
-    // Set up Shape Generator with limited controls (no move/rotate).
-    // Empty string results in default values being set, whereas an invalid
-    // string like "none" gets us what we want.
+    // Set up Shape Generator & Arena to 2D settings.
     var shapeGenString = `keys:${BLOCKS_KEYS_LIBRARY['DropOnly']};`
-    shapeGenString += "movecontrol:none;"
-    shapeGenString += "rotatecontrol:none;"
+    shapeGenString += `shapes:${BLOCKS_BLOCK_LIBRARY['2D4Blocks']};`
+    shapeGenString += `rotateaxes:Z;`
+    this.generator.setAttribute("shapegenerator", shapeGenString);
+
+    // Set up Shape Generator & Arena to 2D settings.
+    // This can work on the arena, since it is clear (if it was not clear
+    // that would cause all sorts of problems...)
+    var arenaString = `z:1;`
+    this.arena.setAttribute("arena", arenaString);
+
+    this.data.tutorialtext.setAttribute("dualtext",
+    `desktoptext:
+     Let's start with the 2D games...
+
+     Shapes will fall into the play area (this one is not falling because we are in a tutorial).
+
+     Position them to create complete layers of blocks.
+     When a layer of blocks is completed, it disappears.
+     You get more points for filling multiple layers at once.
+
+     Hold Space to drop this shape into the gap.;
+     vrtext:
+     Let's start with the 2D games...
+
+     Shapes will fall into the play area  (this one is not falling because we are in a tutorial).
+
+     Position them to create complete layers of blocks.
+     When a layer of blocks is completed, it disappears.
+     You get more points for filling multiple layers at once.
+
+     hold A, X or Right Trigger to drop this shape into the gap.`);
+
+     // Put some blocks in place to create
+     // an almost-complete layer.
+     // !! TO DO - fix this...
+     this.createBlock(-0.2,    0.05,    0, 6);
+     this.createBlock(   0,    0.05,    0, 0);
+     this.createBlock( 0.1,    0.05,    0, 1);
+     this.createBlock( 0.2,    0.05,    0, 1);
+     this.createBlock( 0.3,    0.05,    0, 1);
+
+     this.createBlock(-0.2,    0.15,    0, 6);
+     this.createBlock( 0.2,    0.15,    0, 1);
+     this.createBlock( 0.3,    0.15,    0, 1);
+
+     // Set the shape generator to have controls
+     // disabled.
+     shapeGenString += "movecontrol:none;"
+     shapeGenString += "rotatecontrol:none;"
+
+     this._generator.nextShapeChoice = 2;
+     this._generator.generateShape(true);
+  },
+
+  step2: function () {
+    this._arena.clearArena();
+
+    // Set the shape generator back to normal 2D settings
+    var shapeGenString = `keys:${BLOCKS_KEYS_LIBRARY['2D']};`
+    shapeGenString += "movecontrol: #lhand.thumbstick,#rhand.grip;"
+    shapeGenString += "rotatecontrol: #rhand.thumbstick,#rhand.grip;"
     this.generator.setAttribute("shapegenerator", shapeGenString);
 
     this.data.tutorialtext.setAttribute("dualtext",
     `desktoptext:
-     When you start a game, shapes will fall into the play area.
+    Use Z & X to move left and right, and R-Shift and Enter to rotate in either direction.
 
-     Position them to create complete layers of blocks.
-     When a layer of blocks is completed, it disappears, recovering your play area, and increasing your score.
-     You get bonus points for filling multiple layers at once.
+    Try it now!  When you're ready, hold Space to drop the shape and move on.;
+    vrtext:
+    You can move shapes left and right using the left thumbstick.  You can rotate them using the right thumbstick.
+
+    Or, if you prefer, you can hold the Grip on the right controller, and move and rotate the controller to move and rotate the shape.
+
+    Try it now!  When you're ready, hold A, X or Right Trigger to drop the shape and move on.`);
+
+    this._generator.nextShapeChoice = 3;
+    this._generator.generateShape(true);
+
+  },
+
+  step3: function () {
+
+    this._arena.clearArena();
+
+    // Set up Shape Generator & Arena back to 3D settings.
+    shapeGenString += `shapes:${BLOCKS_BLOCK_LIBRARY['3D4Blocks']};`
+    shapeGenString += `rotateaxes:XYZ;`
+    this.generator.setAttribute("shapegenerator", shapeGenString);
+
+    var arenaString = `z:6;`
+    this.arena.setAttribute("arena", arenaString);
+
+    // Set up Shape Generator with limited controls (no move/rotate).
+    var shapeGenString = `keys:${BLOCKS_KEYS_LIBRARY['DropOnly']};`
+    shapeGenString += "movecontrol:none;"
+    shapeGenString += "rotatecontrol:none;"
+    shapeGenString += `shapes:${BLOCKS_BLOCK_LIBRARY['3D4Blocks']};`
+    this.generator.setAttribute("shapegenerator", shapeGenString);
+
+    this.data.tutorialtext.setAttribute("dualtext",
+    `desktoptext:
+     For a 3D game, you need to fill a complete layer of blocks before it will disappear.
 
      Hold Space to drop this block into the gap.;
      vrtext:
-     When you start a game, shapes will fall into the play area.
-
-     Position them to create complete layers of blocks.
-     When a layer of blocks is completed, it disappears, recovering your play area, and increasing your score.
-     You get bous points for filling multiple layers at once.
+     For a 3D game, you need to fill a complete layer of blocks before it will disappear.
 
      Hold A, X or Right Trigger to drop this block into the gap.`);
     this._generator.nextShapeChoice = 1;
@@ -1466,15 +1584,14 @@ AFRAME.registerComponent('blocks-tutorial', {
     this.createBlock(0.1,  0.05,  0.2, 1);
     this.createBlock(0.2,  0.05,  0.2, 2);
 
-
   },
 
-  step2: function () {
+  step4: function () {
     this._arena.clearArena();
 
-    // Set up Shape Generator back to normal settings.
+    // Set up Shape Generator back to normal settings (full movement)
     var shapeGenString = `keys:${BLOCKS_KEYS_LIBRARY['3D']};`
-    shapeGenString += "movecontrol: #lhand.thumbstick;"
+    shapeGenString += "movecontrol: #lhand.thumbstick,#rhand.grip;"
     shapeGenString += "rotatecontrol: #rhand.thumbstick,#rhand.grip;"
     this.generator.setAttribute("shapegenerator", shapeGenString);
 
@@ -1502,21 +1619,23 @@ AFRAME.registerComponent('blocks-tutorial', {
 
   },
 
-  step3: function () {
+  step5: function () {
 
     this._arena.clearArena();
 
     this.data.tutorialtext.setAttribute("dualtext",
     `desktoptext:
-     You can position shapes by moving them around horizontally.
+     In 3D games, shapes can be moved forwards and backwards as well as left and right.
 
      Use keys YGHJ (like WASD) to move this block around.
 
      Try it now!  When you've finished, hold Space to drop the shape and move on.;
      vrtext:
-     You can position shapes by moving them around horizontally.
+     In 3D games, shapes can be moved forwards and backwards as well as left and right.
 
      Use the left thumbstick to move this block around.
+
+     Or hold right grip and move the controller to move the block.
 
      Try it now!  When you've finished, hold A, X or Right Trigger to drop the shape and move on.`);
     this._generator.nextShapeChoice = 0;
@@ -1524,22 +1643,18 @@ AFRAME.registerComponent('blocks-tutorial', {
 
   },
 
-  step4: function () {
+  step6: function () {
     this._arena.clearArena();
 
     this.data.tutorialtext.setAttribute("dualtext",
     `desktoptext:
-     You can also rotate shapes.
-
-     When we are playing in 3D, there are 3 different ways that blocks can be rotated.
+     In 3D, there are 3 different ways that blocks can be rotated.
 
      To rotate the shape forwards or backwards (like nodding your head) use 5 & 8 on the number pad.
 
      Try it now!  When you've finished, hold Space to drop the shape and move on.;
      vrtext:
-     You can also rotate shapes.
-
-     When we are playing in 3D, there are 3 different ways that blocks can be rotated.
+     In 3D, there are 3 different ways that blocks can be rotated.
 
      To rotate the shape forwards or backwards (like nodding your head) push the right thumbstick forwards or backwards.
 
@@ -1549,7 +1664,7 @@ AFRAME.registerComponent('blocks-tutorial', {
 
   },
 
-  step5: function () {
+  step7: function () {
     this._arena.clearArena();
 
     this.data.tutorialtext.setAttribute("dualtext",
@@ -1567,7 +1682,7 @@ AFRAME.registerComponent('blocks-tutorial', {
   },
 
 
-  step6: function () {
+  step8: function () {
     this._arena.clearArena();
 
     this.data.tutorialtext.setAttribute("dualtext",
@@ -1586,7 +1701,7 @@ AFRAME.registerComponent('blocks-tutorial', {
 
   },
 
-  step7: function () {
+  step9: function () {
     this._arena.clearArena();
 
     this.data.tutorialtext.setAttribute("dualtext",
@@ -1597,9 +1712,9 @@ AFRAME.registerComponent('blocks-tutorial', {
 
      When you've finished, hold Space to drop the shape and move on.;
      vrtext:
-     As an alternative, you can rotate in any direction by holding down the grip button on the right controller, and rotating the entire controller in the same way that you want the shape to rotate.
+     As an alternative to using the thumbstick, try holding down the grip button on the right controller and rotating the entire controller.
 
-     If you look at your hand, you'll see a shape appear that will help to guide your movements.
+     On your right hand, you'll see a shape appear that will help to guide your movements.
 
      Try it now!  When you've finished, hold A, X or Right Trigger to drop the shape and move on.`);
     this._generator.nextShapeChoice = 6;
@@ -1607,49 +1722,7 @@ AFRAME.registerComponent('blocks-tutorial', {
 
   },
 
-  step8: function () {
-    this._arena.clearArena();
-
-    // Set up Shape Generator & Arena to 2D settings.
-    var shapeGenString = `keys:${BLOCKS_KEYS_LIBRARY['2D']};`
-    shapeGenString += `shapes:${BLOCKS_BLOCK_LIBRARY['2D4Blocks']};`
-    shapeGenString += `rotateaxes:Z;`
-    this.generator.setAttribute("shapegenerator", shapeGenString);
-
-    // Set up Shape Generator & Arena to 2D settings.
-    // This can work on the arena, since it is clear (if it was not clear
-    // that would cause all sorts of problems...)
-    var arenaString = `z:1;`
-    this.arena.setAttribute("arena", arenaString);
-
-    this.data.tutorialtext.setAttribute("dualtext",
-    `desktoptext:
-     For 2D games, we use a different (simpler) set of controls.
-
-     Use Z & X to move left and right, and R-Shift and Enter to rotate in either direction.
-
-     Try it now!  When you've finished, hold Space to drop the shape and move on.;
-     vrtext:
-     For 2D games, the controls are just the same, but you can only move blocks left and right, and roll the shapes left and right.
-
-     Try it now!  When you've finished, hold A, X or Right Trigger to drop the shape and move on.`);
-
-    this._generator.nextShapeChoice = 2;
-    this._generator.generateShape(true);
-
-  },
-
-  step9: function () {
-
-    // Set up Shape Generator & Arena to 2D settings.
-    var shapeGenString = `keys:${BLOCKS_KEYS_LIBRARY['3D']};`
-    shapeGenString += `shapes:${BLOCKS_BLOCK_LIBRARY['3D4Blocks']};`
-    shapeGenString += `rotateaxes:XYZ;`
-    this.generator.setAttribute("shapegenerator", shapeGenString);
-
-    // Set Shape Generator & Arena back to 3D settings.
-    var arenaString = `z:6;`
-    this.arena.setAttribute("arena", arenaString);
+  step10: function () {
 
     this._arena.clearArena();
 
@@ -1665,17 +1738,15 @@ AFRAME.registerComponent('blocks-tutorial', {
     vrtext:
     As you move around the play area, controls will adapt to your orientation, so you can play the game from any position.
 
-    If you don't have enough physical space to move around, you can use the left trigger to teleport.
-
-    Try it now!
-
-    That's the end of the Tutorial.  When you have finished, hold A, X or Right Trigger to drop the shape, and then choose a game to play.`);
+    If you are playing seated, or don't have much space, hold both left and right grip buttons together to access various locomotion controls.
+    
+    When you are ready to play, hold A, X or Right Trigger to drop the shape, then choose a game to play.`);
 
     this._generator.nextShapeChoice = 2;
     this._generator.generateShape(true);
   },
 
-  step10: function () {
+  step11: function () {
     this._arena.clearArena();
     // Trigger "game over" to reset tutorial to base state.
     // Simplest way to do this is to declare arena full.  The game engine picks

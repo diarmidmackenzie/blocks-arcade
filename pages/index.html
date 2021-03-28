@@ -85,7 +85,7 @@
               event-set__disablets="_event:texthide;_target:#rig; thumbsticksteering.disabled:true">
        <a-text width=1
                align="center"
-               value = '"Locomotion Mode"\n
+               value = 'Locomotion Controls\n
                         Left Thumbstick to move\n
                         Left Trigger to teleport\n
                         Right Thumbstick to turn\n
@@ -124,34 +124,21 @@
   </a-entity>
 
 <!-- Welcome pane-->
-<a-plane material= "color:black;transparent:true;opacity:0.9" position = "0 1.6 4" rotation="0 0 0" height = "3" width = "2.5"
+<a-plane material= "color:black;transparent:true;opacity:0.9" position = "0 1.6 4" rotation="0 0 0" height = "1.5" width = "2.5"
          key-bindings="bindings:Space=next,#rhand.abuttondown=next,#rhand.gripdown=next">
   <a-text id="welcome-panel" width="2.2" text=wrapCount:55 position = "-1.1 0 0" align="left"
-          dualtext='desktoptext:Welcome to the Blocks Arcade!\n
+          dualtext="desktoptext:Welcome to the Blocks Arcade!\n
     If you have a VR-capable device, enter VR by clicking the icon in the bottom right of the screen.\n
     If you are using a desktop computer...
     ... press 1 to jump to the tutorial to get started.\n
     ... keys 2-9 will also jump you to useful positions, and 0 will bring you back here.\n
     You can also use WASD or cursors to move, and the mouse to look around.\n
-    This experience was designed primarily to be played in VR, but all games can also be played on desktop using the keyboard.\n\n
-    Blocks Arcade developed by Diarmid Mackenzie using A-Frame.\n
-    Background scene is "Psychedelica City Area One" by Bernd Kromueller.\n
-    Music is "A New Year" by Scott Buckley.\n
-    All code is open source and available on GitHub.\n
-    https://github.com/diarmidmackenzie/blocks-arcade\n
-    Comments and feedback welcome on Twitter @blocksarcadeVR, or Reddit r/BlocksArcade.\n
-    This game is free for everyone.  Please share it with your friends!;
+    This experience was designed primarily to be played in VR, but all games can also be played on desktop using the keyboard.\n\n;
     vrtext:Welcome to the Blocks Arcade!\n
-    You are now in VR mode.  Enter the Arcade by walking forwards, or teleporting using the Left Trigger.\n
+    You are now in VR mode.  Enter the Arcade by walking forwards.\n
     You will find a basic tutorial directly ahead of you.\n
-    This game has been primarily tested on the Oculus Quest 2, but I expect it to work on other VR platforms too.\n\n
-    Blocks Arcade developed by Diarmid Mackenzie using A-Frame and Three.js.\n
-    Background scene is "Psychedelica City Area One" by Bernd Kromueller.\n
-    Music is "A New Year" by Scott Buckley.\n
-    All code is open source and available on GitHub.\n
-    https://github.com/diarmidmackenzie/blocks-arcade\n
-    Comments and feedback welcome on Twitter @blocksarcadeVR, or Reddit r/BlocksArcade.\n
-    This game is free for everyone.  Please share it with your friends!'>
+    If you are playing seated, or dont have much space, hold both left and right grip buttons together to access various locomotion controls.\n
+    (you need to keep both grip buttons held to use these)\n">
   </a-text>
 </a-plane>
 
