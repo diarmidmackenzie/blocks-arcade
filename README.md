@@ -75,10 +75,10 @@ Parameters right now are very limited, but may be extended over time
 
 These allow players to control which of their two eyes blocks are displayed to.
 
-- shapes=<layers> : the layer(s) on which to display falling shapes.
-- arena=<layers> : the layer(s) on which to display blocks that have already landed.
+- shapes=[layer]: the layer on which to display falling shapes.
+- arena= [layer] : the layer on which to display blocks that have already landed.
 
-<layers> can be set to:
+[layer] can be set to:
 
 - 0 to display on both eyes
 - 1 to display on left eye only
