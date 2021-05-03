@@ -62,6 +62,32 @@ The keyboard controls are fixed in space, so even if you walk behind the machine
 
 
 
+## URL Parameters
+
+Some configuration is controlled by URL parameters rather than in-game config.  Reasons for this are:
+
+- Quick and simple, without having to worry about coding in-game options screens
+- By bookmarking a specific URL, users can save their preferences, without the game having to have a back-end, or use local storage.
+
+Parameters right now are very limited, but may be extended over time
+
+#### Display Parameters
+
+These allow players to control which of their two eyes blocks are displayed to.
+
+- shapes=<layers> : the layer(s) on which to display falling shapes.
+- arena=<layers> : the layer(s) on which to display blocks that have already landed.
+
+<layers> can be set to:
+
+- 0 to display on both eyes
+- 1 to display on left eye only
+- 2 to display on right eye only.
+
+For example https://blocksarcade.xyz?shapes=1&arena=2 will show falling shapes to the left eye only, and landed shapes to the right eye only.
+
+
+
 ## Feedback
 
 Any feedback from players of the game is hugely appreciated.  You can offer your feedback in any of the following ways:

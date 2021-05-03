@@ -621,6 +621,15 @@ AFRAME.registerComponent('blocks-machine', {
                                this.data.gameh * this.data.gameh) * BLOCKS_BLOCK_SIZE;
 
     const colors = BLOCKS_BLOCK_LIBRARY[this.data.shapeset].match(/,/g).length + 1;
+
+    // layers to render blocks in arena is configurable by the URL
+    var url_string = window.location.href;
+    var url = new URL(url_string);
+    var layers = url.searchParams.get("arena");
+    if (!layers) {
+      layers = "";
+    }
+
     for (var ii = 0; ii < colors; ii++) {
       entityEl = document.createElement('a-entity');
       entityEl.setAttribute("id", `arena${this.data.id}-mesh${ii}`);
@@ -629,13 +638,15 @@ AFRAME.registerComponent('blocks-machine', {
       entityEl.setAttribute("instanced-mesh",
                             `capacity: ${(this.data.xsize * this.data.zsize * this.data.gameh)};
                              fccenter:${fccenter};
-                             fcradius:${fcradius}`);
+                             fcradius:${fcradius};
+                             layers:${layers}`);
       this.el.appendChild(entityEl);
 
       entityEl = document.createElement('a-mixin');
       entityEl.setAttribute("id", `arena${this.data.id}-mixin${ii}`);
       entityEl.setAttribute("instanced-mesh-member", `mesh:#arena${this.data.id}-mesh${ii};debug:true`);
       entityEl.setAttribute("scale", "0.05 0.05 0.05");
+
       this.el.appendChild(entityEl);
     }
     // Create the stand.
@@ -1739,7 +1750,7 @@ AFRAME.registerComponent('blocks-tutorial', {
     As you move around the play area, controls will adapt to your orientation, so you can play the game from any position.
 
     If you are playing seated, or don't have much space, hold both left and right grip buttons together to access various locomotion controls.
-    
+
     When you are ready to play, hold A, X or Right Trigger to drop the shape, then choose a game to play.`);
 
     this._generator.nextShapeChoice = 2;
