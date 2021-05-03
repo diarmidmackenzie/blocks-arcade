@@ -10,11 +10,70 @@
     <script src="https://cdn.jsdelivr.net/gh/diarmidmackenzie/6dof-object-control@v0.5-alpha/src/thumbstick-object-control.min.js"></script>
     <script src="https://cdn.jsdelivr.net/gh/diarmidmackenzie/instanced-mesh@latest/src/instanced-mesh.min.js"></script>
     <script src="https://cdn.jsdelivr.net/gh/diarmidmackenzie/blocks-engine@v0.4.2-alpha/src/blocks.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/diarmidmackenzie/blocks-arcade@v0.4-alpha/src/blocksarcade-utils.min.js"></script>    
+    <script src="https://cdn.jsdelivr.net/gh/diarmidmackenzie/blocks-arcade@v0.4-alpha/src/blocksarcade-utils.min.js"></script>
     <script src="https://unpkg.com/aframe-layers-component@1.0.0/dist/aframe-layers-component.js"></script>
+    <script>
+
+    AFRAME.registerComponent('warn-on-layer-settings', {
+
+      init: function() {
+
+        var url_string = window.location.href;
+        var url = new URL(url_string);
+        var shapesLayers = url.searchParams.get("shapes");
+        var arenaLayers = url.searchParams.get("arena");
+        var shapesText = "";
+        var arenaText = ""
+
+        switch (shapesLayers) {
+          case "0":
+            shapesText = "Both eyes";
+            break;
+
+          case "1":
+            shapesText = "Left eyes only";
+            break;
+
+          case "2":
+            shapesText = "Right eyes only";
+            break;
+
+          default:
+            shapesText = `Not visible (bad config: ${shapesLayers})`;
+            break;
+        }
+
+        switch (arenaLayers) {
+          case "0":
+            arenaText = "Both eyes";
+            break;
+
+          case "1":
+            arenaText = "Left eyes only";
+            break;
+
+          case "2":
+            arenaText = "Right eyes only";
+            break;
+
+          default:
+            arenaText = `Not visible (bad config: ${arenaLayers})`
+            break;
+        }
+
+        if ((shapesLayers) || (arenaLayers)) {
+          var text = "The URL you provided will display the game with non-standard settings.\n"
+          text += `    Falling shape visibility: ${shapesText}\n`
+          text += `    Landed shape visibility: ${arenaText}\n\n`
+          text += "If you don't want to play with these settings, please play at\n https://blockarcade.xyz"
+          window.alert(text)
+        }
+      }
+    });
+    </script>
 
 </head>
-  <body>
+  <body onload="warnOnSettings()">
     <a-scene renderer="colorManagement:true">
 
       <a-assets>
@@ -126,7 +185,8 @@
 
 <!-- Welcome pane-->
 <a-plane material= "color:black;transparent:true;opacity:0.9" position = "0 1.6 4" rotation="0 0 0" height = "1.5" width = "2.5"
-         key-bindings="bindings:Space=next,#rhand.abuttondown=next,#rhand.gripdown=next">
+         key-bindings="bindings:Space=next,#rhand.abuttondown=next,#rhand.gripdown=next"
+         warn-on-layer-settings>
   <a-text id="welcome-panel" width="2.2" text=wrapCount:55 position = "-1.1 0 0" align="left"
           dualtext="desktoptext:Welcome to the Blocks Arcade!\n
     If you have a VR-capable device, enter VR by clicking the icon in the bottom right of the screen.\n
