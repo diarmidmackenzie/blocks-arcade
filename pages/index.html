@@ -24,7 +24,13 @@
         var arenaLayers = url.searchParams.get("arena");
         var shapesText = "";
         var arenaText = ""
-
+        
+        var startPosition = url.searchParams.get("start");
+        if(startPosition != undefined) {
+          var rig = document.querySelector('#rig');
+          rig.setAttribute('scene-jumps', 'startposition', startPosition);
+        }
+        
         switch (shapesLayers) {
           case "0":
             shapesText = "Both eyes";
