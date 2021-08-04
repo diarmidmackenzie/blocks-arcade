@@ -367,8 +367,12 @@ AFRAME.registerComponent('scene-jumps', {
       }
     });
 
+    var url_string = window.location.href;
+    var url = new URL(url_string);
+    var startPosition = (url.searchParams.get("start") != undefined) ? url.searchParams.get("start") : 0;
+	
     window.addEventListener('keydown', this.keyListener, false);
-    this.setPosition(0);
+    this.setPosition(startPosition);
     this.setFocus(0, 0);
   },
   tick: function (time, timeDelta) {
