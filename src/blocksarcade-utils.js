@@ -332,6 +332,7 @@ AFRAME.registerComponent('scene-jumps', {
   schema: {
     camera: {type: 'selector', default: "#camera"},
     positions: {type: 'array', default: ["0 0 0 0 0 0"]},
+	startposition: {type: 'int', default: 0},
     foci: {type: 'array', default: ["a-scene"]}
   },
 
@@ -368,7 +369,7 @@ AFRAME.registerComponent('scene-jumps', {
     });
 
     window.addEventListener('keydown', this.keyListener, false);
-    this.setPosition(0);
+    this.setPosition(this.data.startposition);
     this.setFocus(0, 0);
   },
   tick: function (time, timeDelta) {
