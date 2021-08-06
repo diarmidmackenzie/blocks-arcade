@@ -71,6 +71,13 @@ Some configuration is controlled by URL parameters rather than in-game config.  
 
 Parameters right now are very limited, but may be extended over time
 
+#### Start Parameter
+
+This allows players to start instantly at the position of their choice. See Keyboard controls for more information about available positions. 
+- start=[position] the position on which to start
+
+For example https://blocksarcade.xyz?start=2 will start the player at the first tetris game. 
+
 #### Display Parameters
 
 These allow players to control which of their two eyes blocks are displayed to.
