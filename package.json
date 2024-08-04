@@ -6,9 +6,11 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "zip": "npm-build-zip --source=./dist/"
   },
   "devDependencies": {
+    "npm-build-zip": "^1.0.4",
     "vite": "^5.3.4"
   },
   "optionalDependencies": {
