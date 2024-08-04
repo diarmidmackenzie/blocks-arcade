@@ -126,7 +126,7 @@ AFRAME.registerComponent('hi-scores-table', {
                 All code is open source on
                 GitHub.  https://github.com/
                 diarmidmackenzie/blocks-arcade\n
-                Last updated: v0.2, 4 August 2024
+                Last updated: v0.2, 4 Aug 2024
                 Comments and feedback welcome:
                  * Twitter/X: @blocksarcadeVR
                 This game is free for everyone.
