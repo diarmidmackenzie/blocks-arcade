@@ -177,7 +177,6 @@ AFRAME.registerComponent('dualtext', {
 AFRAME.registerComponent('attention', {
   schema: {
     targets: {type: 'array'},
-    //fov: {type: 'number', default: 30},
     maxdistance: {type: 'number', default: 10},
     focusevent: {type: 'string', default: "focus"},
     defocusevent: {type: 'string', default: "defocus"},
@@ -195,8 +194,6 @@ AFRAME.registerComponent('attention', {
     this.cameraWorldPosition = new THREE.Vector3();
     this.vectorToTarget = new THREE.Vector3();
     this.cameraDirectionVector = new THREE.Vector3();
-    this.attention = false;
-    this.fovAngle = this.data.fov * Math.PI / 180;
     this.cameraQuaternion = new THREE.Quaternion();
     this.targets = [];
     this.attentionTarget = null;
